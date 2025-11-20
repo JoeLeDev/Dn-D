@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Category } from "../types"
+import { translateCategory } from "@/lib/translations"
 
 interface ProductFiltersProps {
   search: string
@@ -31,34 +32,57 @@ export function ProductFilters({
   setSort,
 }: ProductFiltersProps) {
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+    <div
+      className="flex flex-col gap-4 sm:flex-row sm:items-center"
+      role="search"
+      aria-label="Filtres de recherche produits"
+    >
+      <label htmlFor="product-search" className="sr-only">
+        Rechercher un produit
+      </label>
       <Input
+        id="product-search"
         type="text"
         placeholder="Rechercher un produit..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         className="flex-1"
+        aria-label="Rechercher un produit"
       />
 
+      <label htmlFor="category-filter" className="sr-only">
+        Filtrer par catégorie
+      </label>
       <Select value={category} onValueChange={setCategory}>
-        <SelectTrigger className="w-full sm:w-[180px]">
+        <SelectTrigger
+          id="category-filter"
+          className="w-full sm:w-[180px]"
+          aria-label="Filtrer par catégorie"
+        >
           <SelectValue placeholder="Catégorie" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">Toutes les catégories</SelectItem>
           {categories.map((cat) => (
             <SelectItem key={cat.id} value={cat.slug}>
-              {cat.name}
+              {translateCategory(cat.name)}
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
 
+      <label htmlFor="sort-filter" className="sr-only">
+        Trier les produits
+      </label>
       <Select
         value={sort}
         onValueChange={(value) => setSort(value as "asc" | "desc" | "none")}
       >
-        <SelectTrigger className="w-full sm:w-[180px]">
+        <SelectTrigger
+          id="sort-filter"
+          className="w-full sm:w-[180px]"
+          aria-label="Trier les produits"
+        >
           <SelectValue placeholder="Trier par" />
         </SelectTrigger>
         <SelectContent>

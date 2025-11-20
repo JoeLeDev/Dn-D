@@ -13,13 +13,56 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
   if (!product) {
     return {
-      title: "Produit introuvable | DnD Shop",
+      title: "Produit introuvable",
+      description: "Le produit demandé n'existe pas ou n'est plus disponible.",
     }
   }
 
+  const productName = product.name
+  const productDescription = product.description.replace(/<[^>]*>/g, "").slice(0, 160)
+  const productImage = product.thumbnail || product.gallery[0] || "/logo.png"
+
   return {
-    title: `${product.name} | DnD Shop`,
-    description: product.description.slice(0, 150),
+    title: productName,
+    description: productDescription,
+    keywords: [
+      productName,
+      ...(product.categories?.map((cat) => cat.name) || []),
+      "produit",
+      "achat",
+    ],
+    openGraph: {
+      type: "website",
+      title: productName,
+      description: productDescription,
+      images: [
+        {
+          url: productImage,
+          width: 1200,
+          height: 630,
+          alt: productName,
+        },
+        ...product.gallery.slice(1, 4).map((img) => ({
+          url: img,
+          width: 1200,
+          height: 630,
+          alt: `${productName} - Vue supplémentaire`,
+        })),
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: productName,
+      description: productDescription,
+      images: [productImage],
+    },
+    alternates: {
+      canonical: `/product/${slug}`,
+    },
+    other: {
+      "product:price:amount": product.price.toString(),
+      "product:price:currency": product.currencyCode,
+    },
   }
 }
 

@@ -1,4 +1,5 @@
 import { Product } from "../types"
+import { ApiError, NetworkError, logError } from "@/lib/errors"
 
 interface GetProductsResponse {
   data?: {
@@ -57,12 +58,10 @@ export async function fetchProducts(): Promise<Product[]> {
   const graphqlUrl = process.env.NEXT_PUBLIC_GRAPHQL_URL
 
   if (!graphqlUrl) {
-    // Log to server console for debugging
-    if (process.env.NODE_ENV === "development") {
-      console.warn(
-        "[fetchProducts] NEXT_PUBLIC_GRAPHQL_URL is not defined. Please check your .env file.",
-      )
-    }
+    logError(
+      new Error("NEXT_PUBLIC_GRAPHQL_URL is not defined"),
+      "fetchProducts - Missing environment variable",
+    )
     return []
   }
 
@@ -76,12 +75,16 @@ export async function fetchProducts(): Promise<Product[]> {
         query: GET_PRODUCTS_QUERY,
       }),
       cache: "no-store",
+      // Timeout après 10 secondes
+      signal: AbortSignal.timeout(10000),
     })
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => "Unable to read error response")
-      throw new Error(
-        `GraphQL request failed: ${response.status} ${response.statusText}. Response: ${errorText}`,
+      throw new ApiError(
+        `Erreur lors de la récupération des produits: ${response.status} ${response.statusText}`,
+        response.status,
+        errorText,
       )
     }
 
@@ -90,13 +93,11 @@ export async function fetchProducts(): Promise<Product[]> {
     // Check for GraphQL errors
     if (result.errors && result.errors.length > 0) {
       const errorMessages = result.errors.map((e) => e.message).join(", ")
-      throw new Error(`GraphQL errors: ${errorMessages}`)
+      throw new ApiError(`Erreurs GraphQL: ${errorMessages}`, undefined, result.errors)
     }
 
     if (!result?.data?.products?.items) {
-      if (process.env.NODE_ENV === "development") {
-        console.warn("[fetchProducts] No products found in response:", result)
-      }
+      logError(new Error("No products found in response"), "fetchProducts - Empty response")
       return []
     }
 
@@ -124,13 +125,27 @@ export async function fetchProducts(): Promise<Product[]> {
       }
     })
   } catch (error) {
-    // Log error details in development for debugging
-    if (process.env.NODE_ENV === "development") {
-      console.error("[fetchProducts] Error fetching products:", {
-        message: error instanceof Error ? error.message : String(error),
-        url: graphqlUrl,
-      })
+    if (error instanceof ApiError) {
+      logError(error, "fetchProducts")
+      throw error // Re-throw pour que les pages puissent gérer l'erreur
     }
-    return []
+
+    if (error instanceof Error && error.name === "AbortError") {
+      const timeoutError = new NetworkError("La requête a expiré. Veuillez réessayer.")
+      logError(timeoutError, "fetchProducts - Timeout")
+      throw timeoutError
+    }
+
+    if (error instanceof TypeError && error.message.includes("fetch")) {
+      const networkError = new NetworkError("Impossible de se connecter au serveur.", error)
+      logError(networkError, "fetchProducts")
+      throw networkError
+    }
+
+    const unknownError = new Error(
+      "Une erreur inattendue est survenue lors du chargement des produits.",
+    )
+    logError(unknownError, "fetchProducts")
+    throw unknownError
   }
 }

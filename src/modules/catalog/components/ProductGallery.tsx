@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback"
 
 interface ProductGalleryProps {
   images: string[]
@@ -20,11 +20,11 @@ export function ProductGallery({ images, alt }: ProductGalleryProps) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" role="group" aria-label="Galerie d'images du produit">
       <div className="relative aspect-square overflow-hidden rounded-lg bg-slate-800">
-        <Image
+        <ImageWithFallback
           src={images[selectedImage]}
-          alt={alt}
+          alt={`${alt} - Image principale ${selectedImage + 1} sur ${images.length}`}
           fill
           sizes="(min-width: 1024px) 50vw, 100vw"
           className="object-cover"
@@ -33,24 +33,28 @@ export function ProductGallery({ images, alt }: ProductGalleryProps) {
       </div>
 
       {images.length > 1 && (
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-4 gap-2" role="group" aria-label="Miniatures d'images">
           {images.map((image, index) => (
             <button
               key={index}
               type="button"
               onClick={() => setSelectedImage(index)}
-              className={`relative aspect-square overflow-hidden rounded-md border-2 transition-all ${
+              className={`relative aspect-square overflow-hidden rounded-md border-2 transition-all focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 focus:ring-offset-slate-900 ${
                 selectedImage === index
                   ? "border-sky-500 ring-2 ring-sky-500/20"
                   : "border-slate-700 hover:border-slate-600"
               }`}
+              aria-label={`Afficher l'image ${index + 1} sur ${images.length}`}
+              aria-pressed={selectedImage === index}
             >
-              <Image
+              <ImageWithFallback
                 src={image}
-                alt={`${alt} - Vue ${index + 1}`}
+                alt=""
                 fill
                 sizes="(min-width: 1024px) 25vw, 25vw"
                 className="object-cover"
+                aria-hidden="true"
+                loading="lazy"
               />
             </button>
           ))}

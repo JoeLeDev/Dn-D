@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
         hostname: "readonlydemo.vendure.io",
         pathname: "/assets/**",
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
     ],
   },
 }

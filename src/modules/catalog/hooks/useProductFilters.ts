@@ -1,17 +1,25 @@
 "use client"
 
 import { useMemo, type SetStateAction } from "react"
-import { useSearchParams, useRouter } from "next/navigation"
+import { useSearchParams, useRouter, usePathname } from "next/navigation"
 import { Product } from "../types"
 
 export function useProductFilters(products: Product[]) {
   const searchParams = useSearchParams()
   const router = useRouter()
+  const pathname = usePathname()
 
   // Lire directement depuis l'URL
   const search = searchParams.get("search") || ""
   const category = searchParams.get("category") || "all"
   const sort = (searchParams.get("sort") as "asc" | "desc" | "none") || "none"
+
+  // Fonction helper pour mettre à jour l'URL en restant sur la page actuelle
+  const updateUrl = (params: URLSearchParams) => {
+    const queryString = params.toString()
+    const newUrl = queryString ? `${pathname}?${queryString}` : pathname
+    router.replace(newUrl, { scroll: false })
+  }
 
   // Fonctions pour mettre à jour l'URL (compatibles avec Dispatch<SetStateAction<T>>)
   const setSearch = (value: SetStateAction<string>) => {
@@ -22,8 +30,7 @@ export function useProductFilters(products: Product[]) {
     } else {
       params.delete("search")
     }
-    const newUrl = params.toString() ? `?${params.toString()}` : "/"
-    router.replace(newUrl, { scroll: false })
+    updateUrl(params)
   }
 
   const setCategory = (value: SetStateAction<string>) => {
@@ -34,8 +41,7 @@ export function useProductFilters(products: Product[]) {
     } else {
       params.delete("category")
     }
-    const newUrl = params.toString() ? `?${params.toString()}` : "/"
-    router.replace(newUrl, { scroll: false })
+    updateUrl(params)
   }
 
   const setSort = (value: SetStateAction<"asc" | "desc" | "none">) => {
@@ -46,8 +52,7 @@ export function useProductFilters(products: Product[]) {
     } else {
       params.delete("sort")
     }
-    const newUrl = params.toString() ? `?${params.toString()}` : "/"
-    router.replace(newUrl, { scroll: false })
+    updateUrl(params)
   }
 
   const filteredProducts = useMemo(() => {

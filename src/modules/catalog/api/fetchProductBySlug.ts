@@ -1,4 +1,5 @@
 import { ProductDetail } from "../types"
+import { ApiError, NetworkError, logError } from "@/lib/errors"
 
 interface GetProductBySlugResponse {
   data?: {
@@ -57,6 +58,15 @@ export async function fetchProductBySlug(slug: string): Promise<ProductDetail | 
   const graphqlUrl = process.env.NEXT_PUBLIC_GRAPHQL_URL
 
   if (!graphqlUrl) {
+    logError(
+      new Error("NEXT_PUBLIC_GRAPHQL_URL is not defined"),
+      "fetchProductBySlug - Missing environment variable",
+    )
+    return null
+  }
+
+  if (!slug || slug.trim() === "") {
+    logError(new Error("Empty slug provided"), "fetchProductBySlug - Invalid slug")
     return null
   }
 
@@ -71,21 +81,32 @@ export async function fetchProductBySlug(slug: string): Promise<ProductDetail | 
         variables: { slug },
       }),
       cache: "no-store",
+      signal: AbortSignal.timeout(10000),
     })
 
     if (!response.ok) {
-      return null
+      if (response.status === 404) {
+        return null // Produit non trouvé, pas une erreur
+      }
+      const errorText = await response.text().catch(() => "Unable to read error response")
+      throw new ApiError(
+        `Erreur lors de la récupération du produit: ${response.status} ${response.statusText}`,
+        response.status,
+        errorText,
+      )
     }
 
     const result: GetProductBySlugResponse = await response.json()
 
     // Check for GraphQL errors
     if (result.errors && result.errors.length > 0) {
+      const errorMessages = result.errors.map((e) => e.message).join(", ")
+      logError(new Error(`GraphQL errors: ${errorMessages}`), "fetchProductBySlug")
       return null
     }
 
     if (!result?.data?.product) {
-      return null
+      return null // Produit non trouvé
     }
 
     const p = result.data.product
@@ -114,7 +135,25 @@ export async function fetchProductBySlug(slug: string): Promise<ProductDetail | 
       sku: firstVariant?.sku ?? "",
       categories: p.collections || [],
     }
-  } catch {
+  } catch (error) {
+    if (error instanceof ApiError) {
+      logError(error, "fetchProductBySlug")
+      throw error
+    }
+
+    if (error instanceof Error && error.name === "AbortError") {
+      const timeoutError = new NetworkError("La requête a expiré. Veuillez réessayer.")
+      logError(timeoutError, "fetchProductBySlug - Timeout")
+      throw timeoutError
+    }
+
+    if (error instanceof TypeError && error.message.includes("fetch")) {
+      const networkError = new NetworkError("Impossible de se connecter au serveur.", error)
+      logError(networkError, "fetchProductBySlug")
+      throw networkError
+    }
+
+    logError(error, "fetchProductBySlug - Unknown error")
     return null
   }
 }
