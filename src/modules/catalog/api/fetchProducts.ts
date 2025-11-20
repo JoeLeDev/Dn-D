@@ -9,6 +9,7 @@ interface GetProductsResponse {
         name: string
         description: string
         featuredAsset: { preview: string } | null
+        collections: { id: string; name: string; slug: string }[]
         variants: {
           id: string
           sku: string
@@ -35,6 +36,11 @@ const GET_PRODUCTS_QUERY = `
         description
         featuredAsset {
           preview
+        }
+        collections {
+          id
+          name
+          slug
         }
         variants {
           id
@@ -97,6 +103,12 @@ export async function fetchProducts(): Promise<Product[]> {
     return result.data.products.items.map((item) => {
       const firstVariant = item.variants[0]
 
+      // Générer des données mockées pour les reviews
+      // Utiliser l'ID du produit comme seed pour avoir des valeurs cohérentes
+      const seed = parseInt(item.id) || 0
+      const reviewCount = Math.floor((seed % 200) + 5) // Entre 5 et 204 avis
+      const averageRating = Number((3.5 + (seed % 15) / 10).toFixed(1)) // Entre 3.5 et 4.9
+
       return {
         id: item.id,
         slug: item.slug,
@@ -105,9 +117,10 @@ export async function fetchProducts(): Promise<Product[]> {
         price: firstVariant?.priceWithTax ?? 0,
         currencyCode: firstVariant?.currencyCode ?? "EUR",
         thumbnail: item.featuredAsset?.preview ?? "/placeholder.png",
-        averageRating: 0,
-        reviewCount: 0,
+        averageRating,
+        reviewCount,
         sku: firstVariant?.sku ?? "",
+        categories: item.collections || [],
       }
     })
   } catch (error) {

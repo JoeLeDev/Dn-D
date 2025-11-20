@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
+import { useSearchParams } from "next/navigation"
 import { Product } from "../types"
 import { Card } from "@/components/ui/card"
 
@@ -10,9 +11,14 @@ interface Props {
 }
 
 export function ProductCard({ product }: Props) {
+  const searchParams = useSearchParams()
+  // Préserver les query params lors de la navigation
+  const queryString = searchParams.toString()
+  const href = `/product/${product.slug}${queryString ? `?${queryString}` : ""}`
+
   return (
     <Card className="group flex flex-col overflow-hidden border-slate-800 bg-slate-900/60">
-      <Link href={`/product/${product.slug}`} className="flex flex-1 flex-col">
+      <Link href={href} className="flex flex-1 flex-col">
         <div className="relative aspect-[4/3] overflow-hidden bg-slate-800">
           <Image
             src={product.thumbnail}
@@ -24,17 +30,18 @@ export function ProductCard({ product }: Props) {
         </div>
 
         <div className="flex flex-1 flex-col gap-2 p-4">
-          <h3 className="line-clamp-2 text-sm font-medium">{product.name}</h3>
+          <h3 className="line-clamp-2 text-sm font-medium text-slate-50">{product.name}</h3>
 
-          <p className="text-lg font-semibold">
-            {(product.price / 100).toFixed(2)} {product.currencyCode}
-          </p>
-
-          {product.reviewCount > 0 && (
-            <p className="text-xs text-slate-400">
-              ⭐ {product.averageRating.toFixed(1)} • {product.reviewCount} avis
+          <div className="flex items-center gap-2">
+            <p className="text-lg font-semibold text-sky-300">
+              {(product.price / 100).toFixed(2)} {product.currencyCode}
             </p>
-          )}
+          </div>
+
+          <p className="text-xs text-slate-400">
+            ⭐ {product.averageRating > 0 ? product.averageRating.toFixed(1) : "0.0"} •{" "}
+            {product.reviewCount} {product.reviewCount <= 1 ? "avis" : "avis"}
+          </p>
 
           <p className="mt-1 line-clamp-2 text-xs text-slate-400">
             {product.description.replace(/<[^>]*>/g, "")}

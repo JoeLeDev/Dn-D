@@ -1,4 +1,3 @@
-// src/modules/catalog/types.ts
 export interface Product {
   id: string
   slug: string
@@ -10,4 +9,16 @@ export interface Product {
   averageRating: number
   reviewCount: number
   sku: string
+  categories: { id: string; name: string; slug: string }[]
+}
+
+export interface Category {
+  id: string
+  name: string
+  slug: string
+}
+
+export interface ProductDetail extends Product {
+  gallery: string[]
+  descriptionHtml: string
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import "./globals.css"
 import { ReactNode } from "react"
 import { ApolloProviderWrapper } from "@/modules/catalog/api/ApolloProviderWrapper"
+import { Toaster } from "sonner"
 
 export const metadata: Metadata = {
   title: "DnD Shop - Technical Test",
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </footer>
           </div>
         </ApolloProviderWrapper>
+        <Toaster />
       </body>
     </html>
   )
