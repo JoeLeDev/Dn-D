@@ -1,7 +1,9 @@
+import { Suspense } from "react"
 import { fetchProducts } from "@/modules/catalog/api/fetchProducts"
 import { HomeContent } from "../HomeContent"
 import { ErrorDisplay } from "@/components/errors/ErrorDisplay"
 import { formatErrorMessage, logError } from "@/lib/errors"
+import { LoadingSpinner } from "@/components/errors/LoadingSpinner"
 
 async function getCatalogueData() {
   try {
@@ -27,6 +29,10 @@ export default async function CataloguePage() {
     )
   }
 
-  return <HomeContent products={products} />
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <HomeContent products={products} />
+    </Suspense>
+  )
 }
 

@@ -1,7 +1,9 @@
+import { Suspense } from "react"
 import { notFound } from "next/navigation"
 import { fetchProductBySlug } from "@/modules/catalog/api/fetchProductBySlug"
 import { ProductDetailClient } from "@/modules/catalog/components/ProductDetailClient"
 import type { Metadata } from "next"
+import { LoadingSpinner } from "@/components/errors/LoadingSpinner"
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>
@@ -76,7 +78,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <section className="space-y-6">
-      <ProductDetailClient product={product} />
+      <Suspense fallback={<LoadingSpinner />}>
+        <ProductDetailClient product={product} />
+      </Suspense>
     </section>
   )
 }
