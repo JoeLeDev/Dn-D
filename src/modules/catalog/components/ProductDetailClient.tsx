@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
@@ -12,6 +12,7 @@ import { toast } from "sonner"
 import { useCart } from "@/modules/cart/hooks/useCart"
 import { convertAndFormatPrice } from "@/lib/currency"
 import { translateProduct, translateProductDescription } from "@/lib/translations"
+import { trackProductView } from "@/lib/analytics"
 
 interface ProductDetailClientProps {
   product: ProductDetail
@@ -26,6 +27,11 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const backUrl = `/catalogue${queryString ? `?${queryString}` : ""}`
 
   const productName = translateProduct(product.name)
+
+  // Track product view
+  useEffect(() => {
+    trackProductView(product.id, productName)
+  }, [product.id, productName])
 
   const handleAddToCart = () => {
     addProduct(product, quantity)

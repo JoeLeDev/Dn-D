@@ -67,9 +67,9 @@ export function HomePageContent({ categories }: HomePageContentProps) {
           <h2 className="text-2xl font-semibold text-slate-50">Nos catégories</h2>
           <Link
             href="/catalogue"
-            className="text-sm text-sky-400 hover:text-sky-300 flex items-center gap-1"
+            className="text-sm text-sky-400 animate-in fade-in duration-200 hover:text-sky-300 flex items-center gap-1"
           >
-            Voir tout <ArrowRight className="h-4 w-4" />
+            Voir tout <ArrowRight className="h-4 w-4 animate-in fade-in duration-200" />
           </Link>
         </div>
 
@@ -83,18 +83,18 @@ export function HomePageContent({ categories }: HomePageContentProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {categories.map((category) => (
               <Link key={category.id} href={`/catalogue?category=${category.slug}`}>
-                <Card className="group border-slate-800 bg-slate-900/60 p-6 hover:bg-slate-900/80 transition-all hover:border-sky-500/50 cursor-pointer h-full flex flex-col">
+                <Card className="group border-slate-800 bg-slate-900/60 p-6 animate-in fade-in duration-300 hover:animate-in hover:zoom-in-95 hover:bg-slate-900/80 hover:border-sky-500/50 cursor-pointer h-full flex flex-col">
                   <div className="flex-1 space-y-3">
-                    <div className="w-12 h-12 rounded-lg bg-sky-500/10 flex items-center justify-center group-hover:bg-sky-500/20 transition-colors">
+                    <div className="w-12 h-12 rounded-lg bg-sky-500/10 flex items-center justify-center animate-in fade-in duration-200 group-hover:animate-in group-hover:zoom-in-105 group-hover:bg-sky-500/20">
                       <ShoppingBag className="h-6 w-6 text-sky-400" />
                     </div>
-                    <h3 className="text-lg font-semibold text-slate-50 group-hover:text-sky-400 transition-colors">
+                    <h3 className="text-lg font-semibold text-slate-50 animate-in fade-in duration-200 group-hover:animate-in group-hover:fade-in group-hover:text-sky-400">
                       {translateCategory(category.name)}
                     </h3>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-sky-400 mt-4 pt-4 border-t border-slate-800">
                     <span>Découvrir</span>
-                    <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="h-4 w-4 animate-in fade-in duration-200 group-hover:animate-in group-hover:slide-in-from-left-1" />
                   </div>
                 </Card>
               </Link>
@@ -105,9 +105,9 @@ export function HomePageContent({ categories }: HomePageContentProps) {
 
       {/* Features Section */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="border-slate-800 bg-slate-900/60 p-6 hover:bg-slate-900/80 transition-all group">
+        <Card className="border-slate-800 bg-slate-900/60 p-6 animate-in fade-in duration-300 hover:animate-in hover:zoom-in-95 hover:bg-slate-900/80 group">
           <div className="space-y-4">
-            <div className="w-12 h-12 rounded-lg bg-sky-500/10 flex items-center justify-center group-hover:bg-sky-500/20 transition-colors">
+            <div className="w-12 h-12 rounded-lg bg-sky-500/10 flex items-center justify-center animate-in fade-in duration-200 group-hover:animate-in group-hover:zoom-in-105 group-hover:bg-sky-500/20">
               <Truck className="h-6 w-6 text-sky-400" />
             </div>
             <div className="space-y-2">
@@ -118,9 +118,9 @@ export function HomePageContent({ categories }: HomePageContentProps) {
             </div>
           </div>
         </Card>
-        <Card className="border-slate-800 bg-slate-900/60 p-6 hover:bg-slate-900/80 transition-all group">
+        <Card className="border-slate-800 bg-slate-900/60 p-6 animate-in fade-in duration-300 hover:animate-in hover:zoom-in-95 hover:bg-slate-900/80 group">
           <div className="space-y-4">
-            <div className="w-12 h-12 rounded-lg bg-sky-500/10 flex items-center justify-center group-hover:bg-sky-500/20 transition-colors">
+            <div className="w-12 h-12 rounded-lg bg-sky-500/10 flex items-center justify-center animate-in fade-in duration-200 group-hover:animate-in group-hover:zoom-in-105 group-hover:bg-sky-500/20">
               <Shield className="h-6 w-6 text-sky-400" />
             </div>
             <div className="space-y-2">
@@ -132,9 +132,9 @@ export function HomePageContent({ categories }: HomePageContentProps) {
             </div>
           </div>
         </Card>
-        <Card className="border-slate-800 bg-slate-900/60 p-6 hover:bg-slate-900/80 transition-all group">
+        <Card className="border-slate-800 bg-slate-900/60 p-6 animate-in fade-in duration-300 hover:animate-in hover:zoom-in-95 hover:bg-slate-900/80 group">
           <div className="space-y-4">
-            <div className="w-12 h-12 rounded-lg bg-sky-500/10 flex items-center justify-center group-hover:bg-sky-500/20 transition-colors">
+            <div className="w-12 h-12 rounded-lg bg-sky-500/10 flex items-center justify-center animate-in fade-in duration-200 group-hover:animate-in group-hover:zoom-in-105 group-hover:bg-sky-500/20">
               <Headphones className="h-6 w-6 text-sky-400" />
             </div>
             <div className="space-y-2">

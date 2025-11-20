@@ -1,8 +1,9 @@
 "use client"
 
-import { useMemo, type SetStateAction } from "react"
+import { useMemo, type SetStateAction, useEffect } from "react"
 import { useSearchParams, useRouter, usePathname } from "next/navigation"
 import { Product } from "../types"
+import { trackSearch, trackCategoryFilter, trackSort } from "@/lib/analytics"
 
 export function useProductFilters(products: Product[]) {
   const searchParams = useSearchParams()
@@ -79,6 +80,25 @@ export function useProductFilters(products: Product[]) {
 
     return result
   }, [search, category, sort, products])
+
+  // Track search, category filter, and sort changes
+  useEffect(() => {
+    if (search.trim()) {
+      trackSearch(search, filteredProducts.length)
+    }
+  }, [search, filteredProducts.length])
+
+  useEffect(() => {
+    if (category !== "all") {
+      trackCategoryFilter(category)
+    }
+  }, [category])
+
+  useEffect(() => {
+    if (sort !== "none") {
+      trackSort(sort)
+    }
+  }, [sort])
 
   return {
     search,

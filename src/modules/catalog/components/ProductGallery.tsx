@@ -39,7 +39,7 @@ export function ProductGallery({ images, alt }: ProductGalleryProps) {
               key={index}
               type="button"
               onClick={() => setSelectedImage(index)}
-              className={`relative aspect-square overflow-hidden rounded-md border-2 transition-all focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 focus:ring-offset-slate-900 ${
+              className={`relative aspect-square overflow-hidden rounded-md border-2 animate-in fade-in duration-200 hover:animate-in hover:zoom-in-95 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 focus:ring-offset-slate-900 ${
                 selectedImage === index
                   ? "border-sky-500 ring-2 ring-sky-500/20"
                   : "border-slate-700 hover:border-slate-600"
@@ -63,4 +63,3 @@ export function ProductGallery({ images, alt }: ProductGalleryProps) {
     </div>
   )
 }
-

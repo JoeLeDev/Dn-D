@@ -17,7 +17,7 @@ export function CartIndicator() {
 
   return (
     <Link href="/cart" className="relative inline-block">
-      <ShoppingCart className="h-5 w-5 transition-opacity hover:opacity-80" />
+      <ShoppingCart className="h-5 w-5 animate-in fade-in duration-200 hover:opacity-80" />
       {mounted && cart.totalItems > 0 && (
         <Badge
           variant="destructive"

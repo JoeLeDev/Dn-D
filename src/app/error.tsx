@@ -33,7 +33,7 @@ export default function Error({
           <Link href="/">
             <Button variant="outline">
               <Home className="mr-2 h-4 w-4" />
-              Retour à l'accueil
+              Retour à l&apos;accueil
             </Button>
           </Link>
         </div>

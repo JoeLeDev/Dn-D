@@ -13,7 +13,7 @@ export function Header() {
       <div className="flex items-center justify-between">
         <Link
           href="/"
-          className="flex items-center gap-2 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 focus:ring-offset-slate-950 rounded"
+          className="flex items-center gap-2 animate-in fade-in duration-200 hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 focus:ring-offset-slate-950 rounded"
           aria-label="Retour à la page d'accueil Dn'D Shop"
         >
           <ImageWithFallback
@@ -33,7 +33,7 @@ export function Header() {
         >
           <Link
             href="/catalogue"
-            className={`text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 focus:ring-offset-slate-950 rounded px-2 py-1 ${
+            className={`text-sm font-medium animate-in fade-in duration-200 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 focus:ring-offset-slate-950 rounded px-2 py-1 ${
               pathname === "/catalogue" ? "text-sky-400" : "text-slate-400 hover:text-slate-200"
             }`}
             aria-current={pathname === "/catalogue" ? "page" : undefined}

@@ -4,7 +4,6 @@ import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { ShoppingCart } from "lucide-react"
 import { Product } from "../types"
-import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { useCart } from "@/modules/cart/hooks/useCart"
@@ -45,7 +44,7 @@ export function ProductCard({ product }: Props) {
             alt={`Image de ${productName}`}
             fill
             sizes="(min-width: 1024px) 300px, 50vw"
-            className="object-cover transition duration-300 group-hover:scale-105"
+            className="object-cover animate-in fade-in duration-300 group-hover:animate-in group-hover:zoom-in-105"
             loading="lazy"
           />
         </div>

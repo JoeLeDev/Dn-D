@@ -6,6 +6,7 @@ import { CartProvider } from "@/modules/cart/context/CartContext"
 import { Header } from "./Header"
 import { Toaster } from "sonner"
 import { ErrorBoundary } from "@/components/errors/ErrorBoundary"
+import { PageViewTracker } from "@/components/analytics/PageViewTracker"
 
 export const metadata: Metadata = {
   title: {
@@ -61,28 +62,29 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="fr">
-      <body className="min-h-screen bg-slate-950 text-slate-50">
-        <ErrorBoundary>
-          <ApolloProviderWrapper>
-            <CartProvider>
-              <div className="mx-auto flex min-h-screen w-[80vw] flex-col px-4 py-6">
-                <Header />
-                <main className="flex-1 w-full" role="main" id="main-content">
-                  {children}
-                </main>
-                <footer
-                  className="mt-8 border-t border-slate-800 pt-4 text-xs text-slate-500"
-                  role="contentinfo"
-                >
-                  Construit par Jonathan Luembe pour le test technique D&amp;D.
-                </footer>
-              </div>
-            </CartProvider>
-          </ApolloProviderWrapper>
-          <Toaster />
-        </ErrorBoundary>
-      </body>
-    </html>
+      <html lang="fr">
+        <body className="min-h-screen bg-slate-950 text-slate-50">
+          <ErrorBoundary>
+            <ApolloProviderWrapper>
+              <CartProvider>
+                <PageViewTracker />
+                <div className="mx-auto flex min-h-screen w-[80vw] flex-col px-4 py-6">
+                  <Header />
+                  <main className="flex-1 w-full" role="main" id="main-content">
+                    {children}
+                  </main>
+                  <footer
+                    className="mt-8 border-t border-slate-800 pt-4 text-xs text-slate-500"
+                    role="contentinfo"
+                  >
+                    Construit par Jonathan Luembe pour le test technique D&amp;D.
+                  </footer>
+                </div>
+              </CartProvider>
+            </ApolloProviderWrapper>
+            <Toaster />
+          </ErrorBoundary>
+        </body>
+      </html>
   )
 }

@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react"
 import Link from "next/link"
 import { Trash2, Plus, Minus, ShoppingBag } from "lucide-react"
 import { useCart } from "../hooks/useCart"
@@ -10,9 +11,15 @@ import { toast } from "sonner"
 import { convertAndFormatPrice, convertToEUR } from "@/lib/currency"
 import { translateProduct } from "@/lib/translations"
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback"
+import { trackEvent } from "@/lib/analytics"
 
 export function CartContent() {
   const { cart, setQuantity, removeProduct, clearCart } = useCart()
+
+  // Track cart view
+  useEffect(() => {
+    trackEvent("cart_view", { itemCount: cart.items.length, totalPrice: cart.totalPrice })
+  }, [cart.items.length, cart.totalPrice])
 
   if (cart.items.length === 0) {
     return (
