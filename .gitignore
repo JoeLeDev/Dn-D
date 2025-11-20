@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# test coverage
+coverage/
+.nyc_output/
+
+# temporary files
+*.tmp
+*.bak
+*~
+COMMIT_MESSAGE.txt
+
