@@ -18,6 +18,18 @@ interface TrackingData {
   [key: string]: unknown
 }
 
+// Déclaration globale pour gtag
+declare global {
+  interface Window {
+    gtag?: (
+      command: "config" | "event" | "js" | "set",
+      targetId: string | Date,
+      config?: Record<string, unknown>,
+    ) => void
+    dataLayer?: unknown[]
+  }
+}
+
 /**
  * Envoie un événement de tracking
  * @param event Type d'événement
@@ -27,16 +39,17 @@ export function trackEvent(event: TrackingEvent, data?: Record<string, unknown>)
   // En développement, on log simplement dans la console
   if (process.env.NODE_ENV === "development") {
     console.log("[Analytics]", event, data)
-    return
   }
 
-  // En production, on peut envoyer à un service de tracking
-  // Exemple avec Google Analytics :
-  // if (typeof window !== "undefined" && window.gtag) {
-  //   window.gtag("event", event, data)
-  // }
+  // Si Google Analytics est configuré, envoyer l'événement
+  if (typeof window !== "undefined" && window.gtag && process.env.NEXT_PUBLIC_GA_ID) {
+    window.gtag("event", event, {
+      ...data,
+      event_category: "ecommerce",
+    })
+  }
 
-  // Exemple avec un endpoint personnalisé :
+  // Exemple avec un endpoint personnalisé (décommenter si besoin) :
   // if (typeof window !== "undefined") {
   //   fetch("/api/track", {
   //     method: "POST",
@@ -53,6 +66,13 @@ export function trackEvent(event: TrackingEvent, data?: Record<string, unknown>)
  */
 export function trackPageView(path: string) {
   trackEvent("page_view", { path })
+
+  // Google Analytics nécessite un appel spécifique pour les vues de page
+  if (typeof window !== "undefined" && window.gtag && process.env.NEXT_PUBLIC_GA_ID) {
+    window.gtag("config", process.env.NEXT_PUBLIC_GA_ID, {
+      page_path: path,
+    })
+  }
 }
 
 /**

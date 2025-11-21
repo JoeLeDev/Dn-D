@@ -7,6 +7,7 @@ import { Header } from "./Header"
 import { Toaster } from "sonner"
 import { ErrorBoundary } from "@/components/errors/ErrorBoundary"
 import { PageViewTracker } from "@/components/analytics/PageViewTracker"
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics"
 
 export const metadata: Metadata = {
   title: {
@@ -64,6 +65,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
       <html lang="fr">
         <body className="min-h-screen bg-slate-950 text-slate-50">
+          <GoogleAnalytics />
           <ErrorBoundary>
             <ApolloProviderWrapper>
               <CartProvider>

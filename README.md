@@ -169,6 +169,7 @@ Créer un fichier `.env` à la racine du projet :
 ```env
 NEXT_PUBLIC_GRAPHQL_URL=https://readonlydemo.vendure.io/shop-api
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX  # Optionnel : ID Google Analytics
 ```
 
 4. **Lancer le serveur de développement**
@@ -213,6 +214,7 @@ npm run test:coverage # Lance les tests avec couverture
 
 - `NEXT_PUBLIC_GRAPHQL_URL` : URL de l'API GraphQL (requis)
 - `NEXT_PUBLIC_SITE_URL` : URL du site pour le SEO (optionnel, défaut: localhost:3000)
+- `NEXT_PUBLIC_GA_ID` : ID Google Analytics (optionnel, ex: `G-XXXXXXXXXX`)
 
 ### Next.js Config
 
@@ -359,7 +361,7 @@ Pour plus d'informations sur les tests, consultez le fichier `TESTS_EXPLANATION.
 
 ## 📊 Système de tracking
 
-Un système de tracking simple a été implémenté pour suivre les interactions utilisateur.
+Un système de tracking simple a été implémenté pour suivre les interactions utilisateur. Le système est conçu pour être flexible et peut être facilement connecté à différents services de tracking.
 
 ### Événements trackés
 
@@ -373,11 +375,21 @@ Un système de tracking simple a été implémenté pour suivre les interactions
 
 ### Implémentation
 
-Le système de tracking est centralisé dans `src/lib/analytics.ts`. En développement, les événements sont loggés dans la console. En production, le code peut être facilement adapté pour envoyer les données à :
-- Google Analytics
+Le système de tracking est centralisé dans `src/lib/analytics.ts`. Par défaut, les événements sont loggés dans la console en développement.
+
+**Google Analytics (recommandé)** : Pour activer Google Analytics, ajoutez simplement votre ID dans le fichier `.env` :
+```env
+NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
+```
+
+Le script Google Analytics sera automatiquement chargé et tous les événements seront envoyés à Google Analytics. Si l'ID n'est pas défini, le système fonctionne toujours mais les événements ne sont que loggés dans la console.
+
+**Autres services** : Le code peut être facilement adapté pour envoyer les données à :
 - Plausible Analytics
 - Un endpoint API personnalisé
 - Autre service de tracking
+
+Le système est modulaire et peut supporter plusieurs services de tracking simultanément si nécessaire.
 
 ### Utilisation
 
@@ -396,7 +408,6 @@ trackAddToCart(productId, productName, quantity)
 Avec plus de temps, j'implémenterais :
 
 1. **Tests**
-   - ✅ Tests unitaires (Jest + React Testing Library) - **FAIT**
    - Tests d'intégration
    - Tests E2E (Playwright ou Cypress)
 
@@ -406,7 +417,6 @@ Avec plus de temps, j'implémenterais :
    - Pagination infinie ou lazy loading des produits
 
 3. **Fonctionnalités**
-   - ✅ Système de tracking simple - **FAIT**
    - Favoris/Wishlist
    - Comparaison de produits
    - Filtres avancés (prix, note, etc.)
@@ -426,15 +436,3 @@ Avec plus de temps, j'implémenterais :
 ## 📄 Licence
 
 Ce projet a été développé dans le cadre d'un test technique pour l'agence Dn'D.
-
-## 👤 Auteur
-
-**Jonathan Luembe**
-- Développé pour le test technique Dn'D
-- Agence Dn'D - 6 rue Germaine Richier 75013 Paris
-
-## 🙏 Remerciements
-
-- API GraphQL fournie par [Vendure Demo](https://readonlydemo.vendure.io)
-- Composants UI par [shadcn/ui](https://ui.shadcn.com)
-- Icônes par [Lucide](https://lucide.dev)
