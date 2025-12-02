@@ -3,6 +3,7 @@ import { fetchProducts } from "@/modules/catalog/api/fetchProducts"
 import { HomePageContent } from "../HomePageContent"
 import { ErrorDisplay } from "@/components/errors/ErrorDisplay"
 import { formatErrorMessage, logError } from "@/lib/errors"
+import { getTranslations } from "next-intl/server"
 
 async function getHomePageData() {
   try {
@@ -16,11 +17,12 @@ async function getHomePageData() {
 
 export default async function HomePage() {
   const { categories, products, error } = await getHomePageData()
+  const t = await getTranslations("errors")
 
   if (error) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center p-6">
-        <ErrorDisplay title="Erreur de chargement" message={formatErrorMessage(error)} />
+        <ErrorDisplay title={t("page.title")} message={formatErrorMessage(error)} />
       </div>
     )
   }

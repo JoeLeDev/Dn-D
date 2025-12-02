@@ -10,7 +10,7 @@ import { Card } from "@/components/ui/card"
 import { toast } from "sonner"
 import { convertAndFormatPrice, convertToEUR } from "@/lib/currency"
 import { useProductTranslation } from "@/lib/translations-client"
-import { useLocale } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback"
 import { trackCartView } from "@/lib/analytics"
 
@@ -18,6 +18,7 @@ export function CartContent() {
   const { cart, setQuantity, removeProduct, clearCart } = useCart()
   const translateProduct = useProductTranslation()
   const locale = useLocale()
+  const t = useTranslations("cart")
 
   // Track cart view
   useEffect(() => {
@@ -34,12 +35,12 @@ export function CartContent() {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <ShoppingBag className="mb-4 h-16 w-16 text-slate-600" />
-        <h3 className="mb-2 text-lg font-semibold">Votre panier est vide</h3>
+        <h3 className="mb-2 text-lg font-semibold">{t("empty")}</h3>
         <p className="mb-6 text-sm text-slate-400">
-          Parcourez notre catalogue et ajoutez des produits à votre panier.
+          {t("emptyDescription")}
         </p>
         <Link href={`/${locale}/catalogue`}>
-          <Button>Retour au catalogue</Button>
+          <Button>{t("backToCatalog")}</Button>
         </Link>
       </div>
     )
@@ -48,7 +49,7 @@ export function CartContent() {
   const handleQuantityChange = (productId: string, newQuantity: number) => {
     if (newQuantity < 1) {
       removeProduct(productId)
-      toast.success("Article supprimé du panier")
+      toast.success(t("itemRemoved"))
       return
     }
     setQuantity(productId, newQuantity)
@@ -56,19 +57,19 @@ export function CartContent() {
 
   const handleRemove = (productId: string, productName: string) => {
     removeProduct(productId)
-    toast.success(`${productName} supprimé du panier`)
+    toast.success(`${productName} ${t("itemRemovedWithName")}`)
   }
 
   const handleClearCart = () => {
     clearCart()
-    toast.success("Panier vidé")
+    toast.success(t("cartCleared"))
   }
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm ">
-          {cart.totalItems} {cart.totalItems <= 1 ? "article" : "articles"}
+          {cart.totalItems} {cart.totalItems <= 1 ? t("item") : t("items")}
         </p>
         <Button
           size="sm"
@@ -76,8 +77,8 @@ export function CartContent() {
           className="w-full sm:w-auto bg-sky-400 hover:bg-sky-500 text-black"
         >
           <Trash2 className="mr-2 h-4 w-4" />
-          <span className="hidden sm:inline">Vider le panier</span>
-          <span className="sm:hidden">Vider</span>
+          <span className="hidden sm:inline">{t("clear")}</span>
+          <span className="sm:hidden">{t("clearShort")}</span>
         </Button>
       </div>
 
@@ -172,28 +173,28 @@ export function CartContent() {
       <Card className="border-slate-800 bg-slate-900/60 p-4 sm:p-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-slate-400">Sous-total</span>
+            <span className="text-slate-400">{t("subtotal")}</span>
             <span className="text-sky-300">{(cart.totalPrice / 100).toFixed(2)} €</span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-slate-400">Nombre d&apos;articles</span>
+            <span className="text-slate-400">{t("itemCount")}</span>
             <span className="text-slate-50">{cart.totalItems}</span>
           </div>
           <div className="border-t border-slate-800 pt-4">
             <div className="flex items-center justify-between">
-              <span className="text-lg font-semibold">Total</span>
+              <span className="text-lg font-semibold">{t("total")}</span>
               <span className="text-xl font-bold text-sky-300">
                 {(cart.totalPrice / 100).toFixed(2)} €
               </span>
             </div>
           </div>
           <Button size="lg" className="w-full" disabled>
-            <span className="hidden sm:inline">Passer la commande (Avec Stripe ou PayPal)</span>
-            <span className="sm:hidden">Passer la commande</span>
+            <span className="hidden sm:inline">{t("checkout")}</span>
+            <span className="sm:hidden">{t("checkoutShort")}</span>
           </Button>
           <Link href={`/${locale}/catalogue`}>
             <Button className="w-full bg-sky-400 hover:bg-sky-500 text-black">
-              Continuer les achats
+              {t("continueShopping")}
             </Button>
           </Link>
         </div>

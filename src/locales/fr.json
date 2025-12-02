@@ -36,12 +36,43 @@
     "items": "articles",
     "item": "article",
     "clear": "Vider le panier",
-    "remove": "Supprimer"
+    "clearShort": "Vider",
+    "remove": "Supprimer",
+    "subtotal": "Sous-total",
+    "itemCount": "Nombre d'articles",
+    "itemRemoved": "Article supprimé du panier",
+    "itemRemovedWithName": "supprimé du panier",
+    "cartCleared": "Panier vidé",
+    "checkout": "Passer la commande (Avec Stripe ou PayPal)",
+    "checkoutShort": "Passer la commande",
+    "continueShopping": "Continuer les achats"
   },
   "navbar": {
     "catalog": "Catalogue",
     "cart": "Panier",
     "home": "Accueil"
+  },
+  "home": {
+    "welcome": "Bienvenue sur",
+    "subtitle": "Découvrez notre sélection de produits de qualité. Parcourez nos catégories et trouvez exactement ce dont vous avez besoin pour tous vos projets.",
+    "discoverCatalog": "Découvrir le catalogue",
+    "ourCategories": "Nos catégories",
+    "seeAll": "Voir tout",
+    "discover": "Découvrir",
+    "noCategories": "Aucune catégorie disponible",
+    "noCategoriesDescription": "Les catégories seront bientôt disponibles.",
+    "fastDelivery": {
+      "title": "Livraison rapide",
+      "description": "Livraison express sur tous nos produits en stock. Recevez vos commandes en 24-48h."
+    },
+    "securePayment": {
+      "title": "Paiement sécurisé",
+      "description": "Transactions sécurisées avec les meilleurs moyens de paiement. Vos données sont protégées."
+    },
+    "customerService": {
+      "title": "Service client",
+      "description": "Une équipe à votre écoute pour répondre à toutes vos questions. Support 7j/7."
+    }
   },
   "product": {
     "description": "Description",

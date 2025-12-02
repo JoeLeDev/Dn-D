@@ -36,12 +36,43 @@
     "items": "items",
     "item": "item",
     "clear": "Clear cart",
-    "remove": "Remove"
+    "clearShort": "Clear",
+    "remove": "Remove",
+    "subtotal": "Subtotal",
+    "itemCount": "Number of items",
+    "itemRemoved": "Item removed from cart",
+    "itemRemovedWithName": "removed from cart",
+    "cartCleared": "Cart cleared",
+    "checkout": "Checkout (With Stripe or PayPal)",
+    "checkoutShort": "Checkout",
+    "continueShopping": "Continue shopping"
   },
   "navbar": {
     "catalog": "Catalog",
     "cart": "Cart",
     "home": "Home"
+  },
+  "home": {
+    "welcome": "Welcome to",
+    "subtitle": "Discover our selection of quality products. Browse our categories and find exactly what you need for all your projects.",
+    "discoverCatalog": "Discover the catalog",
+    "ourCategories": "Our categories",
+    "seeAll": "See all",
+    "discover": "Discover",
+    "noCategories": "No categories available",
+    "noCategoriesDescription": "Categories will be available soon.",
+    "fastDelivery": {
+      "title": "Fast delivery",
+      "description": "Express delivery on all our products in stock. Receive your orders in 24-48h."
+    },
+    "securePayment": {
+      "title": "Secure payment",
+      "description": "Secure transactions with the best payment methods. Your data is protected."
+    },
+    "customerService": {
+      "title": "Customer service",
+      "description": "A team at your service to answer all your questions. Support 7 days a week."
+    }
   },
   "product": {
     "description": "Description",

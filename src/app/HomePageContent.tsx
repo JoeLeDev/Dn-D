@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, ShoppingBag, Truck, Shield, Headphones } from "lucide-react"
 import { useCategoryTranslation } from "@/lib/translations-client"
-import { useLocale } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback"
 
 interface HomePageContentProps {
@@ -16,6 +16,7 @@ interface HomePageContentProps {
 export function HomePageContent({ categories }: HomePageContentProps) {
   const translateCategory = useCategoryTranslation()
   const locale = useLocale()
+  const t = useTranslations("home")
 
   return (
     <div className="space-y-12">
@@ -39,15 +40,14 @@ export function HomePageContent({ categories }: HomePageContentProps) {
         <div className="relative px-6 py-16 sm:px-12 sm:py-24 lg:px-16 lg:py-32">
           <div className="max-w-4xl mx-auto text-center space-y-6">
             <h1 className="text-4xl font-bold text-slate-50 sm:text-5xl lg:text-6xl leading-tight">
-              Bienvenue sur{" "}
+              {t("welcome")}{" "}
               <span className="bg-gradient-to-r from-sky-400 to-blue-400 bg-clip-text text-transparent">
                 Dn&apos;D Shop
               </span>
             </h1>
 
             <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
-              Découvrez notre sélection de produits de qualité. Parcourez nos catégories et trouvez
-              exactement ce dont vous avez besoin pour tous vos projets.
+              {t("subtitle")}
             </p>
 
             <div className="flex justify-center pt-4">
@@ -56,7 +56,7 @@ export function HomePageContent({ categories }: HomePageContentProps) {
                   size="lg"
                   className="bg-sky-500 hover:bg-sky-600 text-white px-8 py-6 text-base"
                 >
-                  Découvrir le catalogue
+                  {t("discoverCatalog")}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
@@ -68,20 +68,20 @@ export function HomePageContent({ categories }: HomePageContentProps) {
       {/* Categories Grid */}
       <section className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold text-slate-50">Nos catégories</h2>
+          <h2 className="text-2xl font-semibold text-slate-50">{t("ourCategories")}</h2>
           <Link
             href={`/${locale}/catalogue`}
             className="text-sm text-sky-400 animate-in fade-in duration-200 hover:text-sky-300 flex items-center gap-1"
           >
-            Voir tout <ArrowRight className="h-4 w-4 animate-in fade-in duration-200" />
+            {t("seeAll")} <ArrowRight className="h-4 w-4 animate-in fade-in duration-200" />
           </Link>
         </div>
 
         {categories.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <ShoppingBag className="mb-4 h-16 w-16 text-slate-600" />
-            <h3 className="mb-2 text-lg font-semibold">Aucune catégorie disponible</h3>
-            <p className="text-sm text-slate-400"> Les catégories seront bientôt disponibles.</p>
+            <h3 className="mb-2 text-lg font-semibold">{t("noCategories")}</h3>
+            <p className="text-sm text-slate-400">{t("noCategoriesDescription")}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -97,7 +97,7 @@ export function HomePageContent({ categories }: HomePageContentProps) {
                     </h3>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-sky-400 mt-4 pt-4 border-t border-slate-800">
-                    <span>Découvrir</span>
+                    <span>{t("discover")}</span>
                     <ArrowRight className="h-4 w-4 animate-in fade-in duration-200 group-hover:animate-in group-hover:slide-in-from-left-1" />
                   </div>
                 </Card>
@@ -115,9 +115,9 @@ export function HomePageContent({ categories }: HomePageContentProps) {
               <Truck className="h-6 w-6 text-sky-400" />
             </div>
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold text-slate-50">Livraison rapide</h3>
+              <h3 className="text-lg font-semibold text-slate-50">{t("fastDelivery.title")}</h3>
               <p className="text-sm text-slate-400">
-                Livraison express sur tous nos produits en stock. Recevez vos commandes en 24-48h.
+                {t("fastDelivery.description")}
               </p>
             </div>
           </div>
@@ -128,10 +128,9 @@ export function HomePageContent({ categories }: HomePageContentProps) {
               <Shield className="h-6 w-6 text-sky-400" />
             </div>
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold text-slate-50">Paiement sécurisé</h3>
+              <h3 className="text-lg font-semibold text-slate-50">{t("securePayment.title")}</h3>
               <p className="text-sm text-slate-400">
-                Transactions sécurisées avec les meilleurs moyens de paiement. Vos données sont
-                protégées.
+                {t("securePayment.description")}
               </p>
             </div>
           </div>
@@ -142,9 +141,9 @@ export function HomePageContent({ categories }: HomePageContentProps) {
               <Headphones className="h-6 w-6 text-sky-400" />
             </div>
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold text-slate-50">Service client</h3>
+              <h3 className="text-lg font-semibold text-slate-50">{t("customerService.title")}</h3>
               <p className="text-sm text-slate-400">
-                Une équipe à votre écoute pour répondre à toutes vos questions. Support 7j/7.
+                {t("customerService.description")}
               </p>
             </div>
           </div>
