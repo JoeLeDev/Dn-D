@@ -4,10 +4,12 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { ShoppingCart } from "lucide-react"
 import { useCart } from "../hooks/useCart"
+import { useLocale } from "next-intl"
 import { Badge } from "@/components/ui/badge"
 
 export function CartIndicator() {
   const { cart } = useCart()
+  const locale = useLocale()
   const [mounted, setMounted] = useState(false)
 
   // Éviter l'erreur d'hydratation en n'affichant le badge qu'après le montage côté client
@@ -16,7 +18,7 @@ export function CartIndicator() {
   }, [])
 
   return (
-    <Link href="/cart" className="relative inline-block">
+    <Link href={`/${locale}/cart`} className="relative inline-block">
       <ShoppingCart className="h-5 w-5 animate-in fade-in duration-200 hover:opacity-80" />
       {mounted && cart.totalItems > 0 && (
         <Badge
@@ -29,4 +31,3 @@ export function CartIndicator() {
     </Link>
   )
 }
-

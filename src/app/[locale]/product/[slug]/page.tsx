@@ -6,7 +6,7 @@ import type { Metadata } from "next"
 import { LoadingSpinner } from "@/components/errors/LoadingSpinner"
 
 interface ProductPageProps {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string; locale: string }>
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
@@ -84,3 +84,4 @@ export default async function ProductPage({ params }: ProductPageProps) {
     </section>
   )
 }
+

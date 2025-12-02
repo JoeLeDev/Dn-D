@@ -13,7 +13,10 @@ export class ApiError extends Error {
 }
 
 export class NetworkError extends Error {
-  constructor(message: string = "Erreur de connexion réseau", public originalError?: unknown) {
+  constructor(
+    message: string = "Erreur de connexion réseau",
+    public originalError?: unknown,
+  ) {
     super(message)
     this.name = "NetworkError"
   }
@@ -68,4 +71,3 @@ export function logError(error: unknown, context?: string) {
   // En production, vous pourriez envoyer l'erreur à un service de logging
   // comme Sentry, LogRocket, etc.
 }
-

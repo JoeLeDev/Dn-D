@@ -50,9 +50,9 @@ export async function fetchCategories(): Promise<Category[]> {
       body: JSON.stringify({
         query: GET_CATEGORIES_QUERY,
       }),
-      // Utiliser le cache Next.js avec revalidation toutes les 60 secondes
-      // En développement, pas de cache pour éviter les problèmes
-      ...(process.env.NODE_ENV === "production" ? { next: { revalidate: 60 } } : { cache: "no-store" }),
+      ...(process.env.NODE_ENV === "production"
+        ? { next: { revalidate: 60 } }
+        : { cache: "no-store" }),
       signal: AbortSignal.timeout(5000),
     })
 
@@ -82,8 +82,6 @@ export async function fetchCategories(): Promise<Category[]> {
   } catch (error) {
     if (error instanceof ApiError) {
       logError(error, "fetchCategories")
-      // Pour les catégories, on retourne un tableau vide plutôt que de throw
-      // car l'absence de catégories ne doit pas bloquer l'affichage
       return []
     }
 
@@ -101,4 +99,3 @@ export async function fetchCategories(): Promise<Category[]> {
     return []
   }
 }
-

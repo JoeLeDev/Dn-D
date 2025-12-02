@@ -2,6 +2,7 @@
 
 import React, { Component, ReactNode } from "react"
 import { ErrorDisplay } from "./ErrorDisplay"
+import { logError } from "@/lib/errors"
 
 interface Props {
   children: ReactNode
@@ -24,10 +25,11 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    // Log error to console in development
-    if (process.env.NODE_ENV === "development") {
-      console.error("ErrorBoundary caught an error:", error, errorInfo)
-    }
+    logError(error, `ErrorBoundary - ${errorInfo.componentStack}`)
+  }
+
+  handleReset = () => {
+    this.setState({ hasError: false, error: null })
   }
 
   render() {
@@ -37,16 +39,18 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="flex min-h-[400px] items-center justify-center p-6">
-          <ErrorDisplay
-            title="Une erreur inattendue est survenue"
-            message="Nous nous excusons pour la gêne occasionnée. Veuillez rafraîchir la page ou réessayer plus tard."
-            onRetry={() => {
-              this.setState({ hasError: false, error: null })
-              window.location.reload()
-            }}
-            retryLabel="Rafraîchir la page"
-          />
+        <div className="flex min-h-screen items-center justify-center p-6">
+          <div className="max-w-md w-full">
+            <ErrorDisplay
+              title="Une erreur est survenue"
+              message={
+                this.state.error?.message ||
+                "Désolé, une erreur inattendue s'est produite. Veuillez réessayer."
+              }
+              onRetry={this.handleReset}
+              retryLabel="Réessayer"
+            />
+          </div>
         </div>
       )
     }
@@ -54,4 +58,3 @@ export class ErrorBoundary extends Component<Props, State> {
     return this.props.children
   }
 }
-

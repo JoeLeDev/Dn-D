@@ -61,10 +61,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
         localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items))
       } catch (error) {
         logError(error, "CartContext - Save to localStorage")
-        // Si le localStorage est plein, on peut essayer de nettoyer ou notifier l'utilisateur
         if (error instanceof DOMException && error.name === "QuotaExceededError") {
-          // Le localStorage est plein, on pourrait notifier l'utilisateur
-          console.warn("Le panier ne peut pas être sauvegardé : espace de stockage insuffisant")
+          logError(
+            new Error("Le panier ne peut pas être sauvegardé : espace de stockage insuffisant"),
+            "CartContext - localStorage full",
+          )
         }
       }
     }

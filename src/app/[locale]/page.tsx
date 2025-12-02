@@ -1,6 +1,6 @@
 import { fetchCategories } from "@/modules/catalog/api/fetchCategories"
 import { fetchProducts } from "@/modules/catalog/api/fetchProducts"
-import { HomePageContent } from "./HomePageContent"
+import { HomePageContent } from "../HomePageContent"
 import { ErrorDisplay } from "@/components/errors/ErrorDisplay"
 import { formatErrorMessage, logError } from "@/lib/errors"
 
@@ -31,3 +31,4 @@ export default async function HomePage() {
 
   return <HomePageContent categories={availableCategories} />
 }
+

@@ -46,29 +46,12 @@ declare global {
  * @param data Données supplémentaires de l'événement
  */
 export function trackEvent(event: TrackingEvent, data?: Record<string, unknown>) {
-  // En développement, on log simplement dans la console
-  if (process.env.NODE_ENV === "development") {
-    console.log("[Analytics]", event, data)
-  }
-
   // Si Google Analytics est configuré, envoyer l'événement
   if (typeof window !== "undefined" && window.gtag && process.env.NEXT_PUBLIC_GA_ID) {
     window.gtag("event", event, {
       ...data,
-      // Note: event_category n'est plus utilisé dans GA4 (c'était pour Universal Analytics)
     })
   }
-
-  // Exemple avec un endpoint personnalisé (décommenter si besoin) :
-  // if (typeof window !== "undefined") {
-  //   fetch("/api/track", {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify({ event, data }),
-  //   }).catch(() => {
-  //     // Ignore les erreurs de tracking
-  //   })
-  // }
 }
 
 /**
@@ -199,7 +182,7 @@ export function trackCartView(
 export function trackSearch(searchTerm: string, resultsCount: number) {
   trackEvent("search", {
     search_term: searchTerm,
-    // GA4 utilise 'search_term' comme paramètre standard
+    results_count: resultsCount,
   })
 }
 
@@ -216,4 +199,3 @@ export function trackCategoryFilter(categorySlug: string) {
 export function trackSort(sortType: "asc" | "desc" | "none") {
   trackEvent("filter_sort", { sortType })
 }
-

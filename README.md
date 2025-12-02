@@ -5,18 +5,20 @@ Application e-commerce développée avec Next.js pour le test technique de l'age
 ## 🚀 Fonctionnalités
 
 ### Page de Liste Produits (PLP)
+
 - ✅ Filtres par catégorie
 - ✅ Tri par prix (croissant/décroissant)
 - ✅ Recherche par nom de produit
 - ✅ Affichage des produits avec :
-  - Image du produit
-  - Titre
-  - Prix (converti en EUR)
-  - Aperçu des reviews (note moyenne + nombre d'avis)
-  - Bouton d'ajout au panier
-  - Lien vers la page de détail
+- ✅ Image du produit
+- ✅ Titre
+- ✅ Prix (converti en EUR)
+- ✅ Aperçu des reviews (note moyenne + nombre d'avis)
+- ✅ Bouton d'ajout au panier
+- ✅ Lien vers la page de détail
 
 ### Page de Détail Produit (PDP)
+
 - ✅ Slideshow de visuels grand format
 - ✅ Titre et SKU
 - ✅ Aperçu des reviews
@@ -27,6 +29,7 @@ Application e-commerce développée avec Next.js pour le test technique de l'age
 - ✅ Bouton retour au catalogue (avec préservation des filtres)
 
 ### Panier d'achat (Bonus)
+
 - ✅ Affichage des articles
 - ✅ Gestion des quantités
 - ✅ Suppression d'articles
@@ -34,6 +37,7 @@ Application e-commerce développée avec Next.js pour le test technique de l'age
 - ✅ Persistance dans le localStorage
 
 ### Page d'accueil(Bonus)
+
 - ✅ Hero banner
 - ✅ Grille de catégories
 - ✅ Section de fonctionnalités
@@ -41,24 +45,34 @@ Application e-commerce développée avec Next.js pour le test technique de l'age
 ## 🛠️ Technologies utilisées
 
 ### Framework & Core
+
 - **Next.js 16.0.3** (App Router) - Framework React avec SSR/SSG
 - **React 19.2.0** - Bibliothèque UI
 - **TypeScript 5** - Typage statique
 
 ### Styling
+
 - **Tailwind CSS 3.4.17** - Framework CSS utility-first
 - **tailwindcss-animate** - Plugin pour animations avancées (utilisé pour toutes les animations : fade-in, zoom-in, slide-in, etc.)
 - **shadcn/ui** - Composants UI accessibles et personnalisables
 
 ### Data Fetching
+
 - **GraphQL** - Requêtes via fetch natif (pas Apollo Client pour les Server Components)
 - **@apollo/client** - Utilisé uniquement pour le wrapper (compatibilité)
 
 ### State Management
+
 - **React Context API** - Pour le panier d'achat
 - **URL Search Params** - Pour la persistance des filtres
 
+### Internationalisation
+
+- **next-intl** - Gestion multilingue pour Next.js App Router
+- **deepl-node** - Client DeepL API pour traduction automatique (optionnel)
+
 ### Autres
+
 - **sonner** - Notifications toast
 - **lucide-react** - Icônes
 - **class-variance-authority** - Gestion des variantes de composants
@@ -72,13 +86,19 @@ Le projet suit une architecture modulaire inspirée de Clean Architecture :
 ```
 src/
 ├── app/                    # Pages Next.js (App Router)
-│   ├── page.tsx           # Page d'accueil
-│   ├── catalogue/         # Page catalogue
-│   ├── product/[slug]/   # Page détail produit
-│   ├── cart/             # Page panier
-│   ├── layout.tsx        # Layout principal
-│   ├── Header.tsx        # Composant header
-│   └── ...
+│   ├── [locale]/          # Routes localisées (FR/EN)
+│   │   ├── page.tsx       # Page d'accueil
+│   │   ├── catalogue/     # Page catalogue
+│   │   ├── product/[slug]/ # Page détail produit
+│   │   ├── cart/          # Page panier
+│   │   ├── layout.tsx     # Layout avec providers
+│   │   ├── error.tsx      # Page d'erreur
+│   │   └── not-found.tsx  # Page 404
+│   ├── api/               # Routes API
+│   │   └── translate/     # Route de traduction DeepL
+│   ├── Header.tsx         # Composant header
+│   ├── layout.tsx         # Layout racine
+│   └── sitemap.ts         # Génération du sitemap
 │
 ├── modules/               # Modules métier
 │   ├── catalog/          # Module catalogue
@@ -94,66 +114,89 @@ src/
 │       └── types.ts      # Types TypeScript
 │
 ├── components/            # Composants partagés
-│   ├── ui/               # Composants UI de base
-│   └── errors/           # Composants de gestion d'erreurs
+│   ├── ui/               # Composants UI de base (shadcn/ui)
+│   ├── errors/           # Composants de gestion d'erreurs
+│   ├── analytics/        # Composants analytics
+│   └── LanguageSwitcher.tsx # Sélecteur de langue
 │
-└── lib/                  # Utilitaires
-    ├── currency.ts       # Conversion de devises
-    ├── translations.ts   # Traductions FR
-    ├── analytics.ts       # Système de tracking
-    ├── errors.ts         # Gestion d'erreurs
-    └── utils.ts          # Utilitaires généraux
+├── locales/              # Fichiers de traduction i18n
+│   ├── fr.json          # Traductions françaises
+│   └── en.json          # Traductions anglaises
+├── i18n/                # Configuration i18n
+│   └── routing.ts       # Configuration des locales
+├── i18n.ts              # Configuration next-intl
+├── middleware.ts         # Middleware Next.js pour i18n
+└── lib/                 # Utilitaires
+    ├── currency.ts      # Conversion de devises
+    ├── translations.ts  # Traductions (Server Components)
+    ├── translations-client.ts  # Traductions (Client Components)
+    ├── analytics.ts     # Système de tracking
+    ├── errors.ts        # Gestion d'erreurs
+    └── utils.ts         # Utilitaires généraux
 ```
 
 ## 🎯 Choix techniques et justifications
 
 ### Next.js App Router
+
 - **Pourquoi** : Meilleure performance avec Server Components, meilleur SEO, routing intégré
 - **Avantages** : SSR/SSG natifs, optimisations automatiques, support TypeScript
 
 ### Architecture modulaire
+
 - **Pourquoi** : Séparation des responsabilités, maintenabilité, réutilisabilité
 - **Structure** : Chaque module contient ses propres composants, hooks, types et API
 
 ### Tailwind CSS
+
 - **Pourquoi** : Développement rapide, cohérence du design, responsive facile
 - **Avantages** : Pas de CSS custom, classes utilitaires, dark mode natif
 
 ### shadcn/ui
+
 - **Pourquoi** : Composants accessibles, personnalisables, pas de dépendance lourde
 - **Avantages** : Copie du code dans le projet, contrôle total, accessibilité WCAG
 
 ### Context API pour le panier
+
 - **Pourquoi** : État global simple, pas besoin de Redux pour ce cas d'usage
 - **Avantages** : Léger, intégré à React, persistance localStorage
 
 ### URL Search Params pour les filtres
+
 - **Pourquoi** : Persistance des filtres lors de la navigation, partage d'URL
 - **Avantages** : SEO friendly, UX améliorée, pas de state management complexe
 
 ### Fetch natif au lieu d'Apollo Client
+
 - **Pourquoi** : Server Components ne peuvent pas utiliser des hooks React
 - **Avantages** : Plus léger, meilleures performances, compatible SSR
 
-### Traduction frontend
-- **Pourquoi** : L'API retourne des données en anglais, traduction côté client
-- **Implémentation** : Dictionnaire de traductions pour catégories, produits et descriptions
+### Internationalisation (i18n)
+
+- **Pourquoi** : L'API retourne des données en anglais, traduction côté client nécessaire
+- **Implémentation** : Système i18n complet avec `next-intl` pour gérer FR/EN
+- **Structure** : Fichiers de traduction dans `/src/locales/` (fr.json, en.json)
+- **Traduction automatique** : Scripts pour traduire automatiquement via DeepL API
 
 ## 🚀 Installation
 
 ### Prérequis
-- Node.js 20+ 
+
+- Node.js 20+
 - npm, yarn, pnpm ou bun
 
 ### Étapes
 
 1. **Cloner le repository**
+
 ```bash
 git clone <repository-url>
 cd dnd-frontend
 ```
 
 2. **Installer les dépendances**
+
 ```bash
 npm install
 # ou
@@ -173,6 +216,7 @@ NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX  # Optionnel : ID Google Analytics
 ```
 
 4. **Lancer le serveur de développement**
+
 ```bash
 npm run dev
 # ou
@@ -182,6 +226,7 @@ pnpm dev
 ```
 
 5. **Ouvrir dans le navigateur**
+
 ```
 http://localhost:3000
 ```
@@ -206,6 +251,11 @@ npm run typecheck    # Vérifie les types TypeScript
 npm test             # Lance tous les tests
 npm run test:watch   # Lance les tests en mode watch
 npm run test:coverage # Lance les tests avec couverture
+
+# Traductions (optionnel - seulement si vous ajoutez de nouvelles données)
+npm run fetch-data           # Récupère toutes les données de l'API
+npm run generate-translations # Génère la structure de traductions
+npm run translate-all       # Traduit automatiquement via DeepL API (nécessite DEEPL_API_KEY)
 ```
 
 ## 🔧 Configuration
@@ -215,16 +265,19 @@ npm run test:coverage # Lance les tests avec couverture
 - `NEXT_PUBLIC_GRAPHQL_URL` : URL de l'API GraphQL (requis)
 - `NEXT_PUBLIC_SITE_URL` : URL du site pour le SEO (optionnel, défaut: localhost:3000)
 - `NEXT_PUBLIC_GA_ID` : ID Google Analytics (optionnel, ex: `G-XXXXXXXXXX`)
+- `DEEPL_API_KEY` : Clé API DeepL (optionnel, uniquement pour les scripts de traduction automatique et la route `/api/translate`)
 
 ### Next.js Config
 
 Le fichier `next.config.ts` configure :
+
 - Les images distantes autorisées (`readonlydemo.vendure.io`, `images.unsplash.com`)
 - Le React Compiler
 
 ## 🎨 Fonctionnalités avancées
 
 ### SEO
+
 - ✅ Métadonnées Open Graph et Twitter Cards
 - ✅ Sitemap dynamique
 - ✅ robots.txt
@@ -232,6 +285,7 @@ Le fichier `next.config.ts` configure :
 - ✅ Métadonnées structurées par produit
 
 ### Accessibilité
+
 - ✅ ARIA labels et roles
 - ✅ Navigation au clavier
 - ✅ Focus visible
@@ -239,25 +293,33 @@ Le fichier `next.config.ts` configure :
 - ✅ Support des lecteurs d'écran
 
 ### Performances
+
 - ✅ Lazy loading des images
 - ✅ Images optimisées avec Next.js Image
 - ✅ Server Components pour le SSR
 - ✅ Code splitting automatique
 
 ### Gestion d'erreurs
+
 - ✅ Error Boundaries
 - ✅ Pages d'erreur personnalisées (404, 500)
 - ✅ Composants d'affichage d'erreurs
 - ✅ Logging des erreurs
 
-### Internationalisation
-- ✅ Traduction FR des catégories
-- ✅ Traduction FR des noms de produits
-- ✅ Traduction FR des descriptions
+### Traduction (i18n)
+
+- ✅ Support multilingue FR/EN avec `next-intl`
+- ✅ Détection automatique de la langue via middleware
+- ✅ Sélecteur de langue dans le header
+- ✅ Traduction FR/EN des catégories, produits et descriptions (déjà traduites dans les fichiers JSON)
+- ✅ Routes localisées (`/fr/catalogue`, `/en/catalogue`)
+- ✅ Scripts pour traduire automatiquement de nouvelles données via DeepL API (`npm run translate-all`)
+- ✅ Route API `/api/translate` pour traduire du contenu dynamique en temps réel
 
 ## 📊 Structure des données
 
 ### Produit (Product)
+
 ```typescript
 interface Product {
   id: string
@@ -275,6 +337,7 @@ interface Product {
 ```
 
 ### Catégorie (Category)
+
 ```typescript
 interface Category {
   id: string
@@ -342,6 +405,7 @@ npm run test:coverage
 ### Couverture des tests
 
 Les tests couvrent :
+
 - ✅ **Fonctions utilitaires** : Conversion de devises, traductions
 - ✅ **Hooks personnalisés** : `useProductFilters`, `useCart`
 - ✅ **Contextes React** : `CartContext` avec localStorage
@@ -357,7 +421,7 @@ describe("convertToEUR", () => {
 })
 ```
 
-Pour plus d'informations sur les tests, consultez le fichier `TESTS_EXPLANATION.md`.
+Les tests sont organisés dans des dossiers `__tests__` à côté des fichiers qu'ils testent, suivant les conventions de Jest et React Testing Library.
 
 ## 📊 Système de tracking
 
@@ -378,6 +442,7 @@ Un système de tracking simple a été implémenté pour suivre les interactions
 Le système de tracking est centralisé dans `src/lib/analytics.ts`. Par défaut, les événements sont loggés dans la console en développement.
 
 **Google Analytics (recommandé)** : Pour activer Google Analytics, ajoutez simplement votre ID dans le fichier `.env` :
+
 ```env
 NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
 ```
@@ -385,6 +450,7 @@ NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
 Le script Google Analytics sera automatiquement chargé et tous les événements seront envoyés à Google Analytics. Si l'ID n'est pas défini, le système fonctionne toujours mais les événements ne sont que loggés dans la console.
 
 **Autres services** : Le code peut être facilement adapté pour envoyer les données à :
+
 - Plausible Analytics
 - Un endpoint API personnalisé
 - Autre service de tracking
@@ -423,12 +489,9 @@ Avec plus de temps, j'implémenterais :
 
 4. **UX/UI**
    - Animations plus fluides
-   - Skeleton loaders
-   - Mode sombre/clair
    - Amélioration du responsive mobile
 
 5. **Technique**
-   - Internationalisation complète (i18n)
    - PWA (Progressive Web App)
    - Optimisation des images (WebP, AVIF)
    - Service Worker pour le cache

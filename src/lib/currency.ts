@@ -40,4 +40,3 @@ export function convertAndFormatPrice(priceInCents: number, fromCurrency: string
   const priceInEUR = convertToEUR(priceInCents, fromCurrency)
   return formatPriceEUR(priceInEUR)
 }
-

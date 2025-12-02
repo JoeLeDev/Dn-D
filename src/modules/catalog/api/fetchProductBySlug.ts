@@ -80,9 +80,9 @@ export async function fetchProductBySlug(slug: string): Promise<ProductDetail | 
         query: GET_PRODUCT_BY_SLUG_QUERY,
         variables: { slug },
       }),
-      // Utiliser le cache Next.js avec revalidation toutes les 60 secondes
-      // En développement, pas de cache pour éviter les problèmes
-      ...(process.env.NODE_ENV === "production" ? { next: { revalidate: 60 } } : { cache: "no-store" }),
+      ...(process.env.NODE_ENV === "production"
+        ? { next: { revalidate: 60 } }
+        : { cache: "no-store" }),
       signal: AbortSignal.timeout(10000),
     })
 
@@ -117,10 +117,9 @@ export async function fetchProductBySlug(slug: string): Promise<ProductDetail | 
     const gallery = p.assets?.map((a) => a.preview) ?? []
     const thumbnail = p.featuredAsset?.preview ?? gallery[0] ?? "/placeholder.png"
 
-    // Générer des données mockées pour les reviews (cohérentes avec fetchProducts)
     const seed = parseInt(p.id) || 0
-    const reviewCount = Math.floor((seed % 200) + 5) // Entre 5 et 204 avis
-    const averageRating = Number((3.5 + (seed % 15) / 10).toFixed(1)) // Entre 3.5 et 4.9
+    const reviewCount = Math.floor((seed % 200) + 5)
+    const averageRating = Number((3.5 + (seed % 15) / 10).toFixed(1))
 
     return {
       id: p.id,

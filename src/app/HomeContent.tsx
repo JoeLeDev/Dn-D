@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useTranslations } from "next-intl"
 import { ProductGrid } from "@/modules/catalog/components/ProductGrid"
 import { ProductFilters } from "@/modules/catalog/components/ProductFilters"
 import { useProductFilters } from "@/modules/catalog/hooks/useProductFilters"
@@ -12,6 +13,7 @@ interface HomeContentProps {
 }
 
 export function HomeContent({ products }: HomeContentProps) {
+  const t = useTranslations("catalog")
   const { search, setSearch, category, setCategory, sort, setSort, filteredProducts } =
     useProductFilters(products)
   const [categories, setCategories] = useState<Category[]>([])
@@ -28,8 +30,8 @@ export function HomeContent({ products }: HomeContentProps) {
   return (
     <section className="space-y-6">
       <div className="flex items-baseline justify-between">
-        <h2 className="text-2xl font-semibold">Catalogue produits</h2>
-        <p className="text-xs text-slate-500">{filteredProducts.length} résultats</p>
+        <h2 className="text-2xl font-semibold">{t("title")}</h2>
+        <p className="text-xs text-slate-500">{filteredProducts.length} {filteredProducts.length <= 1 ? t("result") : t("results")}</p>
       </div>
 
       <ProductFilters

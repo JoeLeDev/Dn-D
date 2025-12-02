@@ -1,6 +1,7 @@
 "use client"
 
 import { Dispatch, SetStateAction } from "react"
+import { useTranslations } from "next-intl"
 import { Input } from "@/components/ui/input"
 import {
   Select,
@@ -10,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Category } from "../types"
-import { translateCategory } from "@/lib/translations"
+import { useCategoryTranslation } from "@/lib/translations-client"
 
 interface ProductFiltersProps {
   search: string
@@ -31,6 +32,10 @@ export function ProductFilters({
   sort,
   setSort,
 }: ProductFiltersProps) {
+  const t = useTranslations("catalog")
+  const tCommon = useTranslations("common")
+  const translateCategory = useCategoryTranslation()
+
   return (
     <div
       className="flex flex-col gap-4 sm:flex-row sm:items-center"
@@ -38,31 +43,31 @@ export function ProductFilters({
       aria-label="Filtres de recherche produits"
     >
       <label htmlFor="product-search" className="sr-only">
-        Rechercher un produit
+        {tCommon("search")}
       </label>
       <Input
         id="product-search"
         type="text"
-        placeholder="Rechercher un produit..."
+        placeholder={t("searchPlaceholder")}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         className="flex-1"
-        aria-label="Rechercher un produit"
+        aria-label={tCommon("search")}
       />
 
       <label htmlFor="category-filter" className="sr-only">
-        Filtrer par catégorie
+        {tCommon("filter")}
       </label>
       <Select value={category} onValueChange={setCategory}>
         <SelectTrigger
           id="category-filter"
           className="w-full sm:w-[180px]"
-          aria-label="Filtrer par catégorie"
+          aria-label={tCommon("filter")}
         >
-          <SelectValue placeholder="Catégorie" />
+          <SelectValue placeholder={tCommon("category")} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">Toutes les catégories</SelectItem>
+          <SelectItem value="all">{tCommon("allCategories")}</SelectItem>
           {categories.map((cat) => (
             <SelectItem key={cat.id} value={cat.slug}>
               {translateCategory(cat.name)}
@@ -72,26 +77,22 @@ export function ProductFilters({
       </Select>
 
       <label htmlFor="sort-filter" className="sr-only">
-        Trier les produits
+        {tCommon("sort")}
       </label>
-      <Select
-        value={sort}
-        onValueChange={(value) => setSort(value as "asc" | "desc" | "none")}
-      >
+      <Select value={sort} onValueChange={(value) => setSort(value as "asc" | "desc" | "none")}>
         <SelectTrigger
           id="sort-filter"
           className="w-full sm:w-[180px]"
-          aria-label="Trier les produits"
+          aria-label={tCommon("sort")}
         >
-          <SelectValue placeholder="Trier par" />
+          <SelectValue placeholder={tCommon("sort")} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="none">Aucun tri</SelectItem>
-          <SelectItem value="asc">Prix croissant</SelectItem>
-          <SelectItem value="desc">Prix décroissant</SelectItem>
+          <SelectItem value="none">{t("sortNone")}</SelectItem>
+          <SelectItem value="asc">{t("sortAsc")}</SelectItem>
+          <SelectItem value="desc">{t("sortDesc")}</SelectItem>
         </SelectContent>
       </Select>
     </div>
   )
 }
-

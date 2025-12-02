@@ -170,7 +170,7 @@ describe("CartContext", () => {
     // Vérifier que le panier a bien été ajouté
     expect(result.current.cart.items).toHaveLength(1)
     expect(result.current.cart.items[0].productId).toBe("1")
-    
+
     // Vérifier que localStorage a été mis à jour (peut nécessiter plusieurs tentatives)
     const keys = Object.keys(localStorageMock as any)
     const cartKey = keys.find((key) => key.includes("cart"))
@@ -214,4 +214,3 @@ describe("CartContext", () => {
     expect(result.current.cart.items).toHaveLength(0)
   })
 })
-

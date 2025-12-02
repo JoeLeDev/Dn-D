@@ -8,7 +8,12 @@ import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { useCart } from "@/modules/cart/hooks/useCart"
 import { convertAndFormatPrice } from "@/lib/currency"
-import { translateProduct, translateProductDescription, translateCategory } from "@/lib/translations"
+import {
+  useProductTranslation,
+  useProductDescriptionTranslation,
+  useCategoryTranslation,
+} from "@/lib/translations-client"
+import { useLocale, useTranslations } from "next-intl"
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback"
 import { Badge } from "@/components/ui/badge"
 
@@ -18,10 +23,17 @@ interface Props {
 
 export function ProductCard({ product }: Props) {
   const searchParams = useSearchParams()
+  const locale = useLocale()
+  const t = useTranslations("catalog")
+  const tCommon = useTranslations("common")
   const { addProduct } = useCart()
+  const translateProduct = useProductTranslation()
+  const translateCategory = useCategoryTranslation()
+  const translateProductDescription = useProductDescriptionTranslation()
+
   // Préserver les query params lors de la navigation
   const queryString = searchParams.toString()
-  const href = `/product/${product.slug}${queryString ? `?${queryString}` : ""}`
+  const href = `/${locale}/product/${product.slug}${queryString ? `?${queryString}` : ""}`
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -103,7 +115,7 @@ export function ProductCard({ product }: Props) {
           aria-label={`Ajouter ${productName} au panier`}
         >
           <ShoppingCart className="mr-2 h-4 w-4" aria-hidden="true" />
-          Ajouter au panier
+          {t("addToCart")}
         </Button>
       </div>
     </article>

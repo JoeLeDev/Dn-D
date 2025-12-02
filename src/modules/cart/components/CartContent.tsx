@@ -9,12 +9,15 @@ import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
 import { toast } from "sonner"
 import { convertAndFormatPrice, convertToEUR } from "@/lib/currency"
-import { translateProduct } from "@/lib/translations"
+import { useProductTranslation } from "@/lib/translations-client"
+import { useLocale } from "next-intl"
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback"
 import { trackCartView } from "@/lib/analytics"
 
 export function CartContent() {
   const { cart, setQuantity, removeProduct, clearCart } = useCart()
+  const translateProduct = useProductTranslation()
+  const locale = useLocale()
 
   // Track cart view
   useEffect(() => {
@@ -35,7 +38,7 @@ export function CartContent() {
         <p className="mb-6 text-sm text-slate-400">
           Parcourez notre catalogue et ajoutez des produits à votre panier.
         </p>
-        <Link href="/catalogue">
+        <Link href={`/${locale}/catalogue`}>
           <Button>Retour au catalogue</Button>
         </Link>
       </div>
@@ -87,7 +90,7 @@ export function CartContent() {
             <Card key={item.productId} className="border-slate-800 bg-slate-900/60 p-4">
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
-                  href={`/product/${item.product.slug}`}
+                  href={`/${locale}/product/${item.product.slug}`}
                   className="relative h-32 w-full flex-shrink-0 overflow-hidden rounded-md bg-slate-800 sm:h-24 sm:w-24"
                 >
                   <ImageWithFallback
@@ -104,7 +107,7 @@ export function CartContent() {
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
                       <Link
-                        href={`/product/${item.product.slug}`}
+                        href={`/${locale}/product/${item.product.slug}`}
                         className="text-sm font-medium text-slate-50 hover:text-sky-400 line-clamp-2"
                       >
                         {translateProduct(item.product.name)}
@@ -188,7 +191,7 @@ export function CartContent() {
             <span className="hidden sm:inline">Passer la commande (Avec Stripe ou PayPal)</span>
             <span className="sm:hidden">Passer la commande</span>
           </Button>
-          <Link href="/catalogue">
+          <Link href={`/${locale}/catalogue`}>
             <Button className="w-full bg-sky-400 hover:bg-sky-500 text-black">
               Continuer les achats
             </Button>

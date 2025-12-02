@@ -69,7 +69,7 @@ describe("ProductCard", () => {
     // Vérifier que le bouton existe avec le texte
     const buttonText = screen.getByText(/ajouter au panier/i)
     expect(buttonText).toBeInTheDocument()
-    
+
     // Vérifier que c'est bien un bouton
     const buttonElement = container.querySelector("button")
     expect(buttonElement).toBeInTheDocument()
@@ -88,4 +88,3 @@ describe("ProductCard", () => {
     expect(screen.getByText(/A great laptop for work/i)).toBeInTheDocument()
   })
 })
-

@@ -11,7 +11,8 @@ import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
 import { useCart } from "@/modules/cart/hooks/useCart"
 import { convertAndFormatPrice, convertToEUR } from "@/lib/currency"
-import { translateProduct, translateProductDescription } from "@/lib/translations"
+import { useProductTranslation, useProductDescriptionTranslation } from "@/lib/translations-client"
+import { useLocale, useTranslations } from "next-intl"
 import { trackProductView } from "@/lib/analytics"
 
 interface ProductDetailClientProps {
@@ -22,9 +23,14 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const [quantity, setQuantity] = useState(1)
   const searchParams = useSearchParams()
   const { addProduct } = useCart()
+  const t = useTranslations("catalog")
+  const translateProduct = useProductTranslation()
+  const translateProductDescription = useProductDescriptionTranslation()
+  const locale = useLocale()
+
   // Préserver les query params pour le retour au catalogue
   const queryString = searchParams.toString()
-  const backUrl = `/catalogue${queryString ? `?${queryString}` : ""}`
+  const backUrl = `/${locale}/catalogue${queryString ? `?${queryString}` : ""}`
 
   const productName = translateProduct(product.name)
 
@@ -81,7 +87,10 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             </div>
           </div>
 
-          <section className="space-y-2 text-sm text-slate-300" aria-labelledby="description-heading">
+          <section
+            className="space-y-2 text-sm text-slate-300"
+            aria-labelledby="description-heading"
+          >
             <h2
               id="description-heading"
               className="text-xs font-semibold uppercase tracking-wide text-slate-500"
@@ -123,7 +132,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 className="bg-sky-400 hover:bg-sky-500 text-black focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 focus:ring-offset-slate-900"
                 aria-label={`Ajouter ${quantity} ${productName} au panier`}
               >
-                Ajouter au panier
+                {t("addToCart")}
               </Button>
             </div>
           </section>

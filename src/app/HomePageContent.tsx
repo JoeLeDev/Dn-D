@@ -5,7 +5,8 @@ import { Category } from "@/modules/catalog/types"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, ShoppingBag, Truck, Shield, Headphones } from "lucide-react"
-import { translateCategory } from "@/lib/translations"
+import { useCategoryTranslation } from "@/lib/translations-client"
+import { useLocale } from "next-intl"
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback"
 
 interface HomePageContentProps {
@@ -13,6 +14,9 @@ interface HomePageContentProps {
 }
 
 export function HomePageContent({ categories }: HomePageContentProps) {
+  const translateCategory = useCategoryTranslation()
+  const locale = useLocale()
+
   return (
     <div className="space-y-12">
       {/* Hero Banner Section */}
@@ -47,7 +51,7 @@ export function HomePageContent({ categories }: HomePageContentProps) {
             </p>
 
             <div className="flex justify-center pt-4">
-              <Link href="/catalogue">
+              <Link href={`/${locale}/catalogue`}>
                 <Button
                   size="lg"
                   className="bg-sky-500 hover:bg-sky-600 text-white px-8 py-6 text-base"
@@ -66,7 +70,7 @@ export function HomePageContent({ categories }: HomePageContentProps) {
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold text-slate-50">Nos catégories</h2>
           <Link
-            href="/catalogue"
+            href={`/${locale}/catalogue`}
             className="text-sm text-sky-400 animate-in fade-in duration-200 hover:text-sky-300 flex items-center gap-1"
           >
             Voir tout <ArrowRight className="h-4 w-4 animate-in fade-in duration-200" />
@@ -82,7 +86,7 @@ export function HomePageContent({ categories }: HomePageContentProps) {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {categories.map((category) => (
-              <Link key={category.id} href={`/catalogue?category=${category.slug}`}>
+              <Link key={category.id} href={`/${locale}/catalogue?category=${category.slug}`}>
                 <Card className="group border-slate-800 bg-slate-900/60 p-6 animate-in fade-in duration-300 hover:animate-in hover:zoom-in-95 hover:bg-slate-900/80 hover:border-sky-500/50 cursor-pointer h-full flex flex-col">
                   <div className="flex-1 space-y-3">
                     <div className="w-12 h-12 rounded-lg bg-sky-500/10 flex items-center justify-center animate-in fade-in duration-200 group-hover:animate-in group-hover:zoom-in-105 group-hover:bg-sky-500/20">

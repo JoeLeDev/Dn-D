@@ -6,13 +6,13 @@ describe("ErrorDisplay", () => {
     render(<ErrorDisplay />)
 
     expect(screen.getByText("Une erreur est survenue")).toBeInTheDocument()
-    expect(
-      screen.getByText(/Désolé, nous n'avons pas pu charger les données/i),
-    ).toBeInTheDocument()
+    expect(screen.getByText(/Désolé, nous n'avons pas pu charger les données/i)).toBeInTheDocument()
   })
 
   it("should render custom title and message", () => {
-    render(<ErrorDisplay title="Erreur de chargement" message="Impossible de charger les données" />)
+    render(
+      <ErrorDisplay title="Erreur de chargement" message="Impossible de charger les données" />,
+    )
 
     expect(screen.getByText("Erreur de chargement")).toBeInTheDocument()
     expect(screen.getByText("Impossible de charger les données")).toBeInTheDocument()
@@ -26,4 +26,3 @@ describe("ErrorDisplay", () => {
     expect(icon).toBeInTheDocument()
   })
 })
-

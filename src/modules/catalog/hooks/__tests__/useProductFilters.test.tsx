@@ -89,7 +89,11 @@ describe("useProductFilters", () => {
     const { result } = renderHook(() => useProductFilters(mockProducts))
 
     expect(result.current.filteredProducts).toHaveLength(2)
-    expect(result.current.filteredProducts.every((p) => p.categories.some((c) => c.slug === "computers"))).toBe(true)
+    expect(
+      result.current.filteredProducts.every((p) =>
+        p.categories.some((c) => c.slug === "computers"),
+      ),
+    ).toBe(true)
   })
 
   it("should sort products by price ascending", () => {
@@ -137,7 +141,9 @@ describe("useProductFilters", () => {
       result.current.setCategory("computers")
     })
 
-    expect(mockRouter.replace).toHaveBeenCalledWith("/catalogue?category=computers", { scroll: false })
+    expect(mockRouter.replace).toHaveBeenCalledWith("/catalogue?category=computers", {
+      scroll: false,
+    })
   })
 
   it("should remove category filter when set to 'all'", () => {
@@ -181,4 +187,3 @@ describe("useProductFilters", () => {
     expect(result.current.filteredProducts[0].name).toBe("Laptop")
   })
 })
-

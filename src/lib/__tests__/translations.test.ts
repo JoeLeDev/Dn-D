@@ -1,8 +1,4 @@
-import {
-  translateCategory,
-  translateProduct,
-  translateProductDescription,
-} from "../translations"
+import { translateCategory, translateProduct, translateProductDescription } from "../translations"
 
 describe("translations", () => {
   describe("translateCategory", () => {
@@ -63,7 +59,7 @@ describe("translations", () => {
     })
 
     it("should normalize typographic quotes", () => {
-      const description = "It wouldn't really be a \"computer.\""
+      const description = 'It wouldn\'t really be a "computer."'
       const result = translateProductDescription(description)
       // Should handle both straight and curly quotes
       expect(result).toBeDefined()
@@ -76,4 +72,3 @@ describe("translations", () => {
     })
   })
 })
-

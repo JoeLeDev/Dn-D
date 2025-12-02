@@ -86,11 +86,9 @@ export async function fetchProducts(): Promise<Product[]> {
           query: GET_PRODUCTS_QUERY,
           variables: { skip, take },
         }),
-        // Utiliser le cache Next.js avec revalidation toutes les 60 secondes
-        // En développement, pas de cache pour éviter les problèmes
-        // En production, le cache sera utilisé pour accélérer les chargements
-        ...(process.env.NODE_ENV === "production" ? { next: { revalidate: 60 } } : { cache: "no-store" }),
-        // Timeout après 5 secondes (réduit pour éviter les blocages)
+        ...(process.env.NODE_ENV === "production"
+          ? { next: { revalidate: 60 } }
+          : { cache: "no-store" }),
         signal: AbortSignal.timeout(5000),
       })
 
@@ -121,15 +119,11 @@ export async function fetchProducts(): Promise<Product[]> {
         totalItems = result.data.products.totalItems
       }
 
-      // Transformer les produits
       const products = result.data.products.items.map((item) => {
-      const firstVariant = item.variants[0]
-
-      // Générer des données mockées pour les reviews
-      // Utiliser l'ID du produit comme seed pour avoir des valeurs cohérentes
-      const seed = parseInt(item.id) || 0
-      const reviewCount = Math.floor((seed % 200) + 5) // Entre 5 et 204 avis
-      const averageRating = Number((3.5 + (seed % 15) / 10).toFixed(1)) // Entre 3.5 et 4.9
+        const firstVariant = item.variants[0]
+        const seed = parseInt(item.id) || 0
+        const reviewCount = Math.floor((seed % 200) + 5)
+        const averageRating = Number((3.5 + (seed % 15) / 10).toFixed(1))
 
         return {
           id: item.id,
@@ -157,7 +151,7 @@ export async function fetchProducts(): Promise<Product[]> {
   } catch (error) {
     if (error instanceof ApiError) {
       logError(error, "fetchProducts")
-      throw error // Re-throw pour que les pages puissent gérer l'erreur
+      throw error
     }
 
     if (error instanceof Error && error.name === "AbortError") {
