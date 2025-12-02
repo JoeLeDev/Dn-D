@@ -32,12 +32,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Convertir EN/FR en codes DeepL
-    const targetLang = target === "EN" ? "en-US" : "fr-FR"
-    const sourceLang = target === "EN" ? "fr-FR" : "en-US"
-
-    // Traduire le texte
-    const result = await translator.translateText(text, sourceLang, targetLang)
+    // Convertir EN/FR en codes DeepL (DeepL utilise des codes courts)
+    const targetLang = target === "EN" ? ("en" as deepl.TargetLanguageCode) : ("fr" as deepl.TargetLanguageCode)
+    
+    // Laisser DeepL détecter automatiquement la langue source
+    const result = await translator.translateText(text, null, targetLang)
 
     return NextResponse.json({
       text: result.text,
