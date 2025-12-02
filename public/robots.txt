@@ -3,5 +3,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://your-domain.com/sitemap.xml
+# Le sitemap sera généré dynamiquement par Next.js à /sitemap.xml
+# Pour la production, remplacer par votre domaine réel
+Sitemap: http://localhost:3000/sitemap.xml
 

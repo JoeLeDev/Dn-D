@@ -18,6 +18,7 @@ interface GetProductsResponse {
           currencyCode: string
         }[]
       }[]
+      totalItems: number
     }
   }
   errors?: Array<{
@@ -28,8 +29,8 @@ interface GetProductsResponse {
 }
 
 const GET_PRODUCTS_QUERY = `
-  query GetProducts {
-    products(options: { take: 24 }) {
+  query GetProducts($skip: Int!, $take: Int!) {
+    products(options: { skip: $skip, take: $take }) {
       items {
         id
         slug
@@ -50,6 +51,7 @@ const GET_PRODUCTS_QUERY = `
           currencyCode
         }
       }
+      totalItems
     }
   }
 `
@@ -66,42 +68,61 @@ export async function fetchProducts(): Promise<Product[]> {
   }
 
   try {
-    const response = await fetch(graphqlUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: GET_PRODUCTS_QUERY,
-      }),
-      cache: "no-store",
-      // Timeout après 10 secondes
-      signal: AbortSignal.timeout(10000),
-    })
+    // L'API Vendure limite à 100 produits maximum par requête
+    const allProducts: Product[] = []
+    let skip = 0
+    const take = 100 // Maximum autorisé par l'API
+    let totalItems = 0
+    let hasMore = true
 
-    if (!response.ok) {
-      const errorText = await response.text().catch(() => "Unable to read error response")
-      throw new ApiError(
-        `Erreur lors de la récupération des produits: ${response.status} ${response.statusText}`,
-        response.status,
-        errorText,
-      )
-    }
+    // Récupérer tous les produits avec pagination
+    while (hasMore) {
+      const response = await fetch(graphqlUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: GET_PRODUCTS_QUERY,
+          variables: { skip, take },
+        }),
+        // Utiliser le cache Next.js avec revalidation toutes les 60 secondes
+        // En développement, pas de cache pour éviter les problèmes
+        // En production, le cache sera utilisé pour accélérer les chargements
+        ...(process.env.NODE_ENV === "production" ? { next: { revalidate: 60 } } : { cache: "no-store" }),
+        // Timeout après 5 secondes (réduit pour éviter les blocages)
+        signal: AbortSignal.timeout(5000),
+      })
 
-    const result: GetProductsResponse = await response.json()
+      if (!response.ok) {
+        const errorText = await response.text().catch(() => "Unable to read error response")
+        throw new ApiError(
+          `Erreur lors de la récupération des produits: ${response.status} ${response.statusText}`,
+          response.status,
+          errorText,
+        )
+      }
 
-    // Check for GraphQL errors
-    if (result.errors && result.errors.length > 0) {
-      const errorMessages = result.errors.map((e) => e.message).join(", ")
-      throw new ApiError(`Erreurs GraphQL: ${errorMessages}`, undefined, result.errors)
-    }
+      const result: GetProductsResponse = await response.json()
 
-    if (!result?.data?.products?.items) {
-      logError(new Error("No products found in response"), "fetchProducts - Empty response")
-      return []
-    }
+      // Check for GraphQL errors
+      if (result.errors && result.errors.length > 0) {
+        const errorMessages = result.errors.map((e) => e.message).join(", ")
+        throw new ApiError(`Erreurs GraphQL: ${errorMessages}`, undefined, result.errors)
+      }
 
-    return result.data.products.items.map((item) => {
+      if (!result?.data?.products?.items) {
+        logError(new Error("No products found in response"), "fetchProducts - Empty response")
+        break
+      }
+
+      // Mettre à jour le total si c'est la première requête
+      if (totalItems === 0) {
+        totalItems = result.data.products.totalItems
+      }
+
+      // Transformer les produits
+      const products = result.data.products.items.map((item) => {
       const firstVariant = item.variants[0]
 
       // Générer des données mockées pour les reviews
@@ -110,20 +131,29 @@ export async function fetchProducts(): Promise<Product[]> {
       const reviewCount = Math.floor((seed % 200) + 5) // Entre 5 et 204 avis
       const averageRating = Number((3.5 + (seed % 15) / 10).toFixed(1)) // Entre 3.5 et 4.9
 
-      return {
-        id: item.id,
-        slug: item.slug,
-        name: item.name,
-        description: item.description,
-        price: firstVariant?.priceWithTax ?? 0,
-        currencyCode: firstVariant?.currencyCode ?? "EUR",
-        thumbnail: item.featuredAsset?.preview ?? "/placeholder.png",
-        averageRating,
-        reviewCount,
-        sku: firstVariant?.sku ?? "",
-        categories: item.collections || [],
-      }
-    })
+        return {
+          id: item.id,
+          slug: item.slug,
+          name: item.name,
+          description: item.description,
+          price: firstVariant?.priceWithTax ?? 0,
+          currencyCode: firstVariant?.currencyCode ?? "EUR",
+          thumbnail: item.featuredAsset?.preview ?? "/placeholder.png",
+          averageRating,
+          reviewCount,
+          sku: firstVariant?.sku ?? "",
+          categories: item.collections || [],
+        }
+      })
+
+      allProducts.push(...products)
+
+      // Vérifier s'il y a encore des produits à récupérer
+      hasMore = allProducts.length < totalItems
+      skip += take
+    }
+
+    return allProducts
   } catch (error) {
     if (error instanceof ApiError) {
       logError(error, "fetchProducts")

@@ -48,5 +48,9 @@ coverage/
 *.tmp
 *.bak
 *~
+
+# data files (générés par les scripts)
+/data
+
 COMMIT_MESSAGE.txt
 

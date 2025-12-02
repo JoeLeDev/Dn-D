@@ -8,8 +8,9 @@ import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { useCart } from "@/modules/cart/hooks/useCart"
 import { convertAndFormatPrice } from "@/lib/currency"
-import { translateProduct, translateProductDescription } from "@/lib/translations"
+import { translateProduct, translateProductDescription, translateCategory } from "@/lib/translations"
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback"
+import { Badge } from "@/components/ui/badge"
 
 interface Props {
   product: Product
@@ -51,6 +52,29 @@ export function ProductCard({ product }: Props) {
 
         <div className="flex flex-1 flex-col gap-2 p-4">
           <h3 className="line-clamp-2 text-sm font-medium text-slate-50">{productName}</h3>
+
+          {/* Affichage des catégories */}
+          {product.categories && product.categories.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {product.categories.slice(0, 2).map((category) => (
+                <Badge
+                  key={category.id}
+                  variant="outline"
+                  className="text-xs border-slate-700 bg-slate-800/50 text-slate-300 hover:bg-slate-800"
+                >
+                  {translateCategory(category.name)}
+                </Badge>
+              ))}
+              {product.categories.length > 2 && (
+                <Badge
+                  variant="outline"
+                  className="text-xs border-slate-700 bg-slate-800/50 text-slate-300"
+                >
+                  +{product.categories.length - 2}
+                </Badge>
+              )}
+            </div>
+          )}
 
           <div className="flex items-center gap-2">
             <p className="text-lg font-semibold text-sky-300" aria-label="Prix">

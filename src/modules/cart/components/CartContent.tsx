@@ -11,15 +11,21 @@ import { toast } from "sonner"
 import { convertAndFormatPrice, convertToEUR } from "@/lib/currency"
 import { translateProduct } from "@/lib/translations"
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback"
-import { trackEvent } from "@/lib/analytics"
+import { trackCartView } from "@/lib/analytics"
 
 export function CartContent() {
   const { cart, setQuantity, removeProduct, clearCart } = useCart()
 
   // Track cart view
   useEffect(() => {
-    trackEvent("cart_view", { itemCount: cart.items.length, totalPrice: cart.totalPrice })
-  }, [cart.items.length, cart.totalPrice])
+    const items = cart.items.map((item) => ({
+      id: item.product.id,
+      name: item.product.name,
+      price: convertToEUR(item.product.price, item.product.currencyCode),
+      quantity: item.quantity,
+    }))
+    trackCartView(items, cart.totalPrice, "EUR")
+  }, [cart.items, cart.totalPrice])
 
   if (cart.items.length === 0) {
     return (

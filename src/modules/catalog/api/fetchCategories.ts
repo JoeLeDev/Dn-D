@@ -50,8 +50,10 @@ export async function fetchCategories(): Promise<Category[]> {
       body: JSON.stringify({
         query: GET_CATEGORIES_QUERY,
       }),
-      cache: "no-store",
-      signal: AbortSignal.timeout(10000),
+      // Utiliser le cache Next.js avec revalidation toutes les 60 secondes
+      // En développement, pas de cache pour éviter les problèmes
+      ...(process.env.NODE_ENV === "production" ? { next: { revalidate: 60 } } : { cache: "no-store" }),
+      signal: AbortSignal.timeout(5000),
     })
 
     if (!response.ok) {

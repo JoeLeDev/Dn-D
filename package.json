@@ -13,7 +13,8 @@
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "fetch-data": "node scripts/fetch-all-data.js"
   },
   "dependencies": {
     "@apollo/client": "^4.0.9",
@@ -40,6 +41,7 @@
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.22",
     "babel-plugin-react-compiler": "1.0.0",
+    "baseline-browser-mapping": "^2.8.32",
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
     "eslint-config-prettier": "^10.1.8",

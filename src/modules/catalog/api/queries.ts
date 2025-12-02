@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client"
 
 export const GET_PRODUCTS = gql`
-  query GetProducts {
-    products(options: { take: 24 }) {
+  query GetProducts($skip: Int!, $take: Int!) {
+    products(options: { skip: $skip, take: $take }) {
       items {
         id
         slug
@@ -22,6 +22,7 @@ export const GET_PRODUCTS = gql`
           reviewCount
         }
       }
+      totalItems
     }
   }
 `

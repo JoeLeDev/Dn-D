@@ -3,19 +3,22 @@
 import { useCartContext } from "../context/CartContext"
 import { Product } from "@/modules/catalog/types"
 import { trackAddToCart, trackRemoveFromCart } from "@/lib/analytics"
+import { convertToEUR } from "@/lib/currency"
 
 export function useCart() {
   const { cart, addToCart, removeFromCart, updateQuantity, clearCart } = useCartContext()
 
   const addProduct = (product: Product, quantity: number = 1) => {
     addToCart(product, quantity)
-    trackAddToCart(product.id, product.name, quantity)
+    const priceInEUR = convertToEUR(product.price, product.currencyCode)
+    trackAddToCart(product.id, product.name, quantity, priceInEUR, "EUR")
   }
 
   const removeProduct = (productId: string) => {
     const item = cart.items.find((item) => item.productId === productId)
     if (item) {
-      trackRemoveFromCart(productId, item.product.name)
+      const priceInEUR = convertToEUR(item.product.price, item.product.currencyCode)
+      trackRemoveFromCart(productId, item.product.name, priceInEUR, "EUR")
     }
     removeFromCart(productId)
   }

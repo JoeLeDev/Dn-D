@@ -80,7 +80,9 @@ export async function fetchProductBySlug(slug: string): Promise<ProductDetail | 
         query: GET_PRODUCT_BY_SLUG_QUERY,
         variables: { slug },
       }),
-      cache: "no-store",
+      // Utiliser le cache Next.js avec revalidation toutes les 60 secondes
+      // En développement, pas de cache pour éviter les problèmes
+      ...(process.env.NODE_ENV === "production" ? { next: { revalidate: 60 } } : { cache: "no-store" }),
       signal: AbortSignal.timeout(10000),
     })
 

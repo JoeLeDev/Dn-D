@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
 import { useCart } from "@/modules/cart/hooks/useCart"
-import { convertAndFormatPrice } from "@/lib/currency"
+import { convertAndFormatPrice, convertToEUR } from "@/lib/currency"
 import { translateProduct, translateProductDescription } from "@/lib/translations"
 import { trackProductView } from "@/lib/analytics"
 
@@ -30,8 +30,9 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
   // Track product view
   useEffect(() => {
-    trackProductView(product.id, productName)
-  }, [product.id, productName])
+    const priceInEUR = convertToEUR(product.price, product.currencyCode)
+    trackProductView(product.id, productName, priceInEUR, "EUR")
+  }, [product.id, productName, product.price, product.currencyCode])
 
   const handleAddToCart = () => {
     addProduct(product, quantity)
